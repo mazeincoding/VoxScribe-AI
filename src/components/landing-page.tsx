@@ -110,8 +110,8 @@ export default function LandingPage() {
             Effortless Transcription with VoxScribe
           </h1>
           <p className="mt-4 text-lg text-primary-foreground/80 md:text-xl">
-            Transform your audio and video recordings into beautifully formatted
-            text with just a few clicks.
+            Transform your audio and video recordings into beautifully{" "}
+            <strong>formatted</strong> text with just a few clicks.
           </p>
           <div className="mt-8 flex flex-col gap-2 sm:flex-row">
             <Button
