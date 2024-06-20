@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MicIcon, RemoveFormattingIcon, UploadIcon } from "@/components/icons";
+import { UploadIcon, RemoveFormattingIcon } from "@/components/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import Feature from "@/components/feature";
 import {
@@ -15,65 +15,9 @@ import {
 } from "@/components/ui/dialog";
 
 export default function LandingPage() {
-  const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const audioWorkletNodeRef = useRef<AudioWorkletNode | null>(null);
-  const mediaStreamRef = useRef<MediaStream | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && !navigator.mediaDevices) {
-      console.error("navigator.mediaDevices is not supported in this browser.");
-    }
-  }, []);
-
-  const handleRecordClick = async () => {
-    if (isRecording) {
-      audioWorkletNodeRef.current?.port.postMessage("flush");
-      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
-      audioContextRef.current?.close();
-    } else {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
-          });
-          mediaStreamRef.current = stream;
-          const audioContext = new AudioContext();
-          audioContextRef.current = audioContext;
-          await audioContext.audioWorklet.addModule(
-            "/src/audio/recorder-processor.js"
-          );
-          const audioWorkletNode = new AudioWorkletNode(
-            audioContext,
-            "recorder-processor"
-          );
-          audioWorkletNodeRef.current = audioWorkletNode;
-
-          audioWorkletNode.port.onmessage = (event) => {
-            const audioBuffer = event.data;
-            const audioBlob = new Blob([audioBuffer], { type: "audio/wav" });
-            const audioUrl = URL.createObjectURL(audioBlob);
-            setAudioURL(audioUrl);
-            setIsDialogOpen(true);
-          };
-
-          const source = audioContext.createMediaStreamSource(stream);
-          source.connect(audioWorkletNode);
-          audioWorkletNode.connect(audioContext.destination);
-        } catch (err) {
-          console.error("Error accessing media devices.", err);
-        }
-      } else {
-        console.error(
-          "navigator.mediaDevices.getUserMedia is not supported in this browser."
-        );
-      }
-    }
-    setIsRecording(!isRecording);
-  };
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -82,24 +26,16 @@ export default function LandingPage() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Handle file upload logic here
-      console.log(files[0]);
+      const file = files[0];
+      const audioUrl = URL.createObjectURL(file);
+      setAudioURL(audioUrl);
+      setIsDialogOpen(true);
     }
   };
 
   const handleRetry = () => {
     setAudioURL(null);
     setIsDialogOpen(false);
-    setIsRecording(false);
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
-      mediaStreamRef.current = null;
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close();
-      audioContextRef.current = null;
-    }
-    audioWorkletNodeRef.current = null;
   };
 
   return (
@@ -114,14 +50,6 @@ export default function LandingPage() {
             text with just a few clicks.
           </p>
           <div className="mt-8 flex flex-col gap-2 sm:flex-row">
-            <Button
-              className={`flex-1 ${
-                isRecording ? "bg-red-500 hover:bg-red-500" : ""
-              }`}
-              onClick={handleRecordClick}
-            >
-              {isRecording ? "Stop Recording" : "Record Audio"}
-            </Button>
             <Button
               variant="secondary"
               className="flex-1"
@@ -138,11 +66,6 @@ export default function LandingPage() {
             />
           </div>
           <div className="mt-8 flex flex-col gap-4">
-            <Feature
-              icon={<MicIcon className="h-8 w-8 text-primary-foreground" />}
-              title="Record Audio"
-              description="Use your device's microphone to record audio directly within the app."
-            />
             <Feature
               icon={<UploadIcon className="h-8 w-8 text-primary-foreground" />}
               title="Upload File"
