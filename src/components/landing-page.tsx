@@ -19,8 +19,8 @@ export default function LandingPage() {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioWorkletNodeRef = useRef<AudioWorkletNode | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
@@ -31,8 +31,9 @@ export default function LandingPage() {
 
   const handleRecordClick = async () => {
     if (isRecording) {
-      mediaRecorderRef.current?.stop();
-      mediaStreamRef.current?.getTracks().forEach(track => track.stop());
+      audioWorkletNodeRef.current?.port.postMessage("flush");
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+      audioContextRef.current?.close();
     } else {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
@@ -40,24 +41,28 @@ export default function LandingPage() {
             audio: true,
           });
           mediaStreamRef.current = stream;
-          const mediaRecorder = new MediaRecorder(stream);
-          mediaRecorderRef.current = mediaRecorder;
+          const audioContext = new AudioContext();
+          audioContextRef.current = audioContext;
+          await audioContext.audioWorklet.addModule(
+            "/src/audio/recorder-processor.js"
+          );
+          const audioWorkletNode = new AudioWorkletNode(
+            audioContext,
+            "recorder-processor"
+          );
+          audioWorkletNodeRef.current = audioWorkletNode;
 
-          mediaRecorder.ondataavailable = (event) => {
-            audioChunksRef.current.push(event.data);
-          };
-
-          mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunksRef.current, {
-              type: "audio/wav",
-            });
+          audioWorkletNode.port.onmessage = (event) => {
+            const audioBuffer = event.data;
+            const audioBlob = new Blob([audioBuffer], { type: "audio/wav" });
             const audioUrl = URL.createObjectURL(audioBlob);
             setAudioURL(audioUrl);
             setIsDialogOpen(true);
-            audioChunksRef.current = [];
           };
 
-          mediaRecorder.start();
+          const source = audioContext.createMediaStreamSource(stream);
+          source.connect(audioWorkletNode);
+          audioWorkletNode.connect(audioContext.destination);
         } catch (err) {
           console.error("Error accessing media devices.", err);
         }
@@ -87,13 +92,14 @@ export default function LandingPage() {
     setIsDialogOpen(false);
     setIsRecording(false);
     if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach(track => track.stop());
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
       mediaStreamRef.current = null;
     }
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current = null;
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
     }
-    audioChunksRef.current = [];
+    audioWorkletNodeRef.current = null;
   };
 
   return (
