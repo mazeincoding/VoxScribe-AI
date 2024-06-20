@@ -51,11 +51,16 @@ export default function LandingPage() {
           </p>
           <div className="mt-8 flex flex-col gap-2 sm:flex-row">
             <Button
-              variant="secondary"
               className="flex-1"
               onClick={handleUploadClick}
             >
               Upload File
+            </Button>
+            <Button
+              variant="secondary"
+              className="flex-1"
+            >
+              Try Sample
             </Button>
             <input
               type="file"
