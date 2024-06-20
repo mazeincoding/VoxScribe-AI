@@ -21,6 +21,7 @@ export default function LandingPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined" && !navigator.mediaDevices) {
@@ -31,12 +32,14 @@ export default function LandingPage() {
   const handleRecordClick = async () => {
     if (isRecording) {
       mediaRecorderRef.current?.stop();
+      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
     } else {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             audio: true,
           });
+          mediaStreamRef.current = stream;
           const mediaRecorder = new MediaRecorder(stream);
           mediaRecorderRef.current = mediaRecorder;
 
