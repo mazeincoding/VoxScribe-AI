@@ -32,7 +32,7 @@ export default function LandingPage() {
   const handleRecordClick = async () => {
     if (isRecording) {
       mediaRecorderRef.current?.stop();
-      mediaStreamRef.current?.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current?.getTracks().forEach(track => track.stop());
     } else {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
@@ -86,6 +86,14 @@ export default function LandingPage() {
     setAudioURL(null);
     setIsDialogOpen(false);
     setIsRecording(false);
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach(track => track.stop());
+      mediaStreamRef.current = null;
+    }
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current = null;
+    }
+    audioChunksRef.current = [];
   };
 
   return (
