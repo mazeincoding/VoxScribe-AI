@@ -4,7 +4,7 @@ class RecorderProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
     this.port.onmessage = (event) => {
-      if (event.data === "flush") {
+      if (event.data === 'flush') {
         this.flush();
       }
     };
@@ -19,13 +19,16 @@ class RecorderProcessor extends AudioWorkletProcessor {
   }
 
   flush() {
-    const buffer = this._buffer.reduce((acc, cur) => {
-      acc.set(cur, acc.length);
-      return acc;
-    }, new Float32Array(this._buffer.length * 128));
+    const bufferLength = this._buffer.reduce((acc, cur) => acc + cur.length, 0);
+    const buffer = new Float32Array(bufferLength);
+    let offset = 0;
+    for (const chunk of this._buffer) {
+      buffer.set(chunk, offset);
+      offset += chunk.length;
+    }
     this.port.postMessage(buffer);
     this._buffer = [];
   }
 }
 
-registerProcessor("recorder-processor", RecorderProcessor);
+registerProcessor('recorder-processor', RecorderProcessor);
