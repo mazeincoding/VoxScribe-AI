@@ -6,7 +6,7 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: NextRequest) {
-  const { text, rephrase, formatting } = await req.json();
+  const { text, rephrase } = await req.json();
 
   if (!text) {
     return NextResponse.json({ error: "Text is required" }, { status: 400 });
@@ -17,9 +17,9 @@ export async function POST(req: NextRequest) {
     ${
       rephrase
         ? "Rephrase the text to improve clarity."
-        : "Keep the text as close as possible to the original."
+        : "Keep the text the exact same as the original. Your role is only to format the text."
     }
-    Format the text for ${formatting === "discord" ? "Discord" : "iOS Notes"}.
+    Format the text.
 
     Do not include emojis.
   `;

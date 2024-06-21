@@ -22,7 +22,12 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
   toggleTranscripts,
 }) => {
   const pathname = usePathname();
-  const isActive = (href: string) => pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href === "/transcriptions") {
+      return pathname.startsWith("/transcriptions/");
+    }
+    return pathname === href;
+  };
   const router = useRouter();
 
   return (

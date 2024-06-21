@@ -36,75 +36,73 @@ const Transcription: React.FC<TranscriptionProps> = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [formatting, setFormatting] = useState<string>("discord");
 
   const router = useRouter();
 
-  useEffect(() => {
-    const transcribeAudio = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/api/text-to-speech", {
+  const transcribeAudio = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/text-to-speech", {
+        method: "POST",
+        body: JSON.stringify({ audioURL: transcription.audioURL }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        const formattedResponse = await fetch("/api/format-text", {
           method: "POST",
-          body: JSON.stringify({ audioURL: transcription.audioURL }),
+          body: JSON.stringify({
+            text: data.transcription,
+            rephrase: false,
+          }),
           headers: {
             "Content-Type": "application/json",
           },
         });
-        const data = await response.json();
-        if (response.ok) {
-          const formattedResponse = await fetch("/api/format-text", {
+        const formattedData = await formattedResponse.json();
+        if (formattedResponse.ok) {
+          setTranscript(formattedData.formattedText);
+
+          const titleResponse = await fetch("/api/generate-title", {
             method: "POST",
-            body: JSON.stringify({
-              text: data.transcription,
-              rephrase: false,
-              formatting: formatting, // Use the selected formatting option
-            }),
+            body: JSON.stringify({ text: formattedData.formattedText }),
             headers: {
               "Content-Type": "application/json",
             },
           });
-          const formattedData = await formattedResponse.json();
-          if (formattedResponse.ok) {
-            setTranscript(formattedData.formattedText);
-
-            const titleResponse = await fetch("/api/generate-title", {
-              method: "POST",
-              body: JSON.stringify({ text: formattedData.formattedText }),
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-            const titleData = await titleResponse.json();
-            if (titleResponse.ok) {
-              setTitle(titleData.title);
-              await updateDatabase(
-                ref(db, `users/${user.uid}/transcriptions/${transcription.id}`),
-                {
-                  title: titleData.title,
-                  transcript: formattedData.formattedText,
-                }
-              );
-            } else {
-              console.error("Error generating title:", titleData.error);
-            }
+          const titleData = await titleResponse.json();
+          if (titleResponse.ok) {
+            setTitle(titleData.title);
+            await updateDatabase(
+              ref(db, `users/${user.uid}/transcriptions/${transcription.id}`),
+              {
+                title: titleData.title,
+                transcript: formattedData.formattedText,
+              }
+            );
           } else {
-            console.error("Error formatting text:", formattedData.error);
+            console.error("Error generating title:", titleData.error);
           }
         } else {
-          console.error("Error transcribing audio:", data.error);
+          console.error("Error formatting text:", formattedData.error);
         }
-      } catch (error) {
-        console.error("Error transcribing audio:", error);
-      } finally {
-        setIsLoading(false);
+      } else {
+        console.error("Error transcribing audio:", data.error);
       }
-    };
+    } catch (error) {
+      console.error("Error transcribing audio:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (transcription.title === "Untitled" && !transcription.transcript) {
       transcribeAudio();
     }
-  }, [transcription, user.uid, formatting]);
+  }, [transcription, user.uid]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -123,6 +121,46 @@ const Transcription: React.FC<TranscriptionProps> = ({
     }
   };
 
+  const handleRegenerate = async () => {
+    await transcribeAudio();
+  };
+
+  const formatTranscriptForView = (text: string): JSX.Element => {
+    const lines = text.split('\n');
+    return (
+      <>
+        {lines.map((line, index) => {
+          if (line.trim() === '') {
+            return <br key={index} />;
+          }
+          if (line.startsWith('# ')) {
+            return <h1 key={index} className="text-2xl font-bold mb-2">{line.slice(2)}</h1>;
+          }
+          if (line.startsWith('## ')) {
+            return <h2 key={index} className="text-xl font-bold mb-2">{line.slice(3)}</h2>;
+          }
+          if (line.startsWith('### ')) {
+            return <h3 key={index} className="text-lg font-bold mb-2">{line.slice(4)}</h3>;
+          }
+          const parts = line.split(/(\*\*.*?\*\*|\*.*?\*)/g);
+          return (
+            <p key={index} className="mb-2">
+              {parts.map((part, partIndex) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  return <strong key={partIndex}>{part.slice(2, -2)}</strong>;
+                }
+                if (part.startsWith('*') && part.endsWith('*')) {
+                  return <em key={partIndex}>{part.slice(1, -1)}</em>;
+                }
+                return part;
+              })}
+            </p>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <div className="flex h-screen">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
@@ -134,10 +172,9 @@ const Transcription: React.FC<TranscriptionProps> = ({
         >
           <Menu className="cursor-pointer text-lg" />
         </Button>
-        <Card className="flex-1">
-          <CardHeader className="pb-2 pt-4 flex-row items-center">
-            <CardTitle>{title}</CardTitle>
-            <div className="ml-auto space-x-2">
+        <Card className="flex-1 overflow-y-auto">
+          <CardHeader className="pb-2 pt-4 flex flex-col items-center justify-between">
+            <div className="flex space-x-2 mb-4 w-full justify-center">
               <Button
                 variant={activeTab === "view" ? "default" : "outline"}
                 size="sm"
@@ -153,12 +190,13 @@ const Transcription: React.FC<TranscriptionProps> = ({
                 Edit
               </Button>
             </div>
+            <CardTitle>{title}</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : activeTab === "view" ? (
-              <p>{transcript}</p>
+              formatTranscriptForView(transcript)
             ) : (
               <>
                 <div className="relative">
@@ -168,18 +206,6 @@ const Transcription: React.FC<TranscriptionProps> = ({
                     placeholder="Enter your transcript here..."
                     className="pr-36 scrollbar-hide bg-slate-100"
                   />
-                  <Select
-                    value={formatting}
-                    onValueChange={(value) => setFormatting(value)}
-                  >
-                    <SelectTrigger className="absolute top-2 right-2 w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="discord">Discord</SelectItem>
-                      <SelectItem value="ios">iOS Notes</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
                 <div className="flex mt-4 space-x-2">
                   <Button onClick={handleSave} disabled={isSaving}>
@@ -192,7 +218,9 @@ const Transcription: React.FC<TranscriptionProps> = ({
                       "Save"
                     )}
                   </Button>
-                  <Button variant="outline">Regenerate</Button>
+                  <Button variant="outline" onClick={handleRegenerate}>
+                    Regenerate
+                  </Button>
                 </div>
               </>
             )}

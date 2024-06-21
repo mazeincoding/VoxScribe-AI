@@ -2,7 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarLink from "./sidebar-link";
 import SidebarTranscripts from "./sidebar-transcripts";
-import { FileText, Settings, Home } from "lucide-react";
+import { FileText, Home } from "lucide-react";
 import { Transcription } from "@/types/transcription";
 
 interface SidebarNavProps {
@@ -32,16 +32,10 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
 }) => {
   const links: Link[] = [
     {
-      label: "Overview",
-      href: "/dashboard",
-      icon: <Home />,
-    },
-    {
       label: "Transcriptions",
       href: "/transcriptions",
       icon: <FileText />,
     },
-    { label: "Settings", href: "/settings", icon: <Settings /> },
   ];
 
   const toggleTranscripts = () => {
@@ -53,7 +47,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
       className="flex-1 mt-2 relative"
       initial={false}
       animate={{ x: showTranscripts ? "-100%" : "0%" }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
     >
       <motion.ul
         className="absolute top-0 left-0 w-full"

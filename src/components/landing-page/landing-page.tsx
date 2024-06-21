@@ -54,7 +54,7 @@ export default function LandingPage() {
       setIsUploading(true);
       setUploadError(null);
 
-      let downloadURL = ""; // Declare and initialize downloadURL here
+      let downloadURL = "";
 
       if (typeof fileOrUrl === "string") {
         downloadURL = fileOrUrl;
@@ -87,18 +87,23 @@ export default function LandingPage() {
       }
 
       const id = uuidv4();
-      const transcription: Transcription = {
+      const transcriptionRef = dbRef(
+        db,
+        `users/${user.uid}/transcriptions/${id}`
+      );
+      const transcription: Omit<Transcription, "createdAt"> = {
         id,
         title: "Untitled",
         transcript: "",
         audioURL: downloadURL,
         userId: user.uid,
-        createdAt: serverTimestamp(),
       };
-      await set(
-        dbRef(db, `users/${user.uid}/transcriptions/${id}`),
-        transcription
-      );
+
+      await set(transcriptionRef, {
+        ...transcription,
+        createdAt: serverTimestamp(),
+      });
+
       toast.success("File processed successfully!");
       router.push(`/dashboard/transcriptions/${id}`);
     } catch (error) {

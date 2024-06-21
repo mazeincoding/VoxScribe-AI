@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { UploadIcon, RemoveFormattingIcon } from "@/components/icons";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,7 @@ import Feature from "@/components/landing-page/feature";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
 import SignupDialog from "@/components/landing-page/signup-dialog";
+import { ChevronRight } from "lucide-react";
 
 interface UploadSectionProps {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -24,6 +26,7 @@ export default function UploadSection({
 }: UploadSectionProps) {
   const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
   const [user] = useAuthState(auth);
+  const router = useRouter();
 
   const handleUploadClick = () => {
     if (!user) {
@@ -42,6 +45,10 @@ export default function UploadSection({
     action();
   };
 
+  const handleTranscriptionsClick = () => {
+    router.push("/transcriptions");
+  };
+
   return (
     <div className="w-full lg:w-1/2 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 px-8 py-12 md:px-16 md:py-20 lg:px-24 lg:py-24 flex items-center justify-center">
       <div className="mx-auto max-w-2xl text-center">
@@ -53,7 +60,7 @@ export default function UploadSection({
           <strong className="text-white">formatted</strong> text with just a few
           clicks.
         </p>
-        <div className="mt-8 flex flex-col gap-2 sm:flex-row">
+        <div className="mt-8 flex flex-col sm:flex-row">
           <Button
             className="flex-1"
             onClick={() => handleButtonClick(handleUploadClick)}
@@ -63,7 +70,7 @@ export default function UploadSection({
           </Button>
           <Button
             variant="secondary"
-            className="flex-1"
+            className="flex-1 ml-0 mt-3 sm:mt-0 sm:ml-3"
             onClick={() => handleButtonClick(onSampleClick)}
             disabled={loading}
           >
@@ -77,6 +84,16 @@ export default function UploadSection({
             onChange={onFileChange}
           />
         </div>
+        {user && (
+          <Button
+            variant="secondary"
+            className="flex-1 w-full mt-3"
+            onClick={handleTranscriptionsClick}
+          >
+            My Transcriptions
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        )}
         <div className="mt-8 flex flex-col gap-4">
           <Feature
             icon={<UploadIcon className="h-8 w-8 text-primary-foreground" />}

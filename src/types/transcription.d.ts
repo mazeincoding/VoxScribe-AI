@@ -6,5 +6,5 @@ export interface Transcription {
   transcript: string;
   audioURL: string;
   userId: string;
-  createdAt: ReturnType<typeof serverTimestamp>;
+  createdAt: string | number;
 }

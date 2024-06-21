@@ -28,6 +28,11 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
   const pathname = usePathname();
   const isActive = (href: string) => pathname.startsWith(href);
 
+  // Sort transcriptions by createdAt in descending order (most recent first)
+  const sortedTranscriptions = [...transcriptionsData.transcriptions].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   return (
     <motion.ul
       className="absolute top-0 left-full w-full"
@@ -62,7 +67,7 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
         </Breadcrumb>
       </motion.li>
       <AnimatePresence>
-        {transcriptionsData.transcriptions.map((transcript) => (
+        {sortedTranscriptions.map((transcript) => (
           <Link
             key={transcript.id}
             href={`/dashboard/transcriptions/${transcript.id}`}
