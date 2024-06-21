@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "voxscribe-6a880",
+    "staging": "voxscribe-6a880"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
