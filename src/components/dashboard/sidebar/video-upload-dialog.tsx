@@ -21,6 +21,13 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { ChevronRight } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface VideoUploadDialogProps {
   isOpen: boolean;
@@ -37,6 +44,7 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
   const [user] = useAuthState(auth);
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedModel, setSelectedModel] = useState("llama3-70b-8192");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -90,7 +98,7 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
             });
 
             toast.success("File uploaded successfully!");
-            router.push(`/transcriptions/${id}`);
+            router.push(`/transcriptions/${id}/${selectedModel}`);
             resolve();
           }
         );
@@ -111,13 +119,28 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
           <DialogClose />
         </DialogHeader>
         <div className="flex flex-col items-center">
-          <Input
-            type="file"
-            accept="audio/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="mb-4"
-          />
+          <div className="mb-4 w-full">
+            <Input
+              type="file"
+              accept="audio/*"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="mb-4"
+            />
+            <Select
+              defaultValue={selectedModel}
+              onValueChange={(value) => setSelectedModel(value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a model" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="llama3-70b-8192">LLama3</SelectItem>
+                <SelectItem value="llama3-8b-8192">LLama2</SelectItem>
+                <SelectItem value="gemma-7b-it">Gemma 7B</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           {isUploading && (
             <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
               <div

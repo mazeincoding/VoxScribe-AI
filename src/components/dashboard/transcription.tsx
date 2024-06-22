@@ -16,7 +16,7 @@ import { Transcription as TranscriptionType } from "@/types/transcription";
 import { db, updateDatabase } from "@/firebase/config";
 import { ref, get } from "firebase/database";
 import { User } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Input } from "../ui/input";
 import {
@@ -30,11 +30,13 @@ import {
 interface TranscriptionProps {
   transcription: TranscriptionType;
   user: User;
+  model?: string;
 }
 
 const Transcription: React.FC<TranscriptionProps> = ({
   transcription,
   user,
+  model,
 }) => {
   const [transcript, setTranscript] = useState<string>(
     transcription.transcript
@@ -47,10 +49,11 @@ const Transcription: React.FC<TranscriptionProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [audioProgress, setAudioProgress] = useState<number>(0);
-  const [selectedModel, setSelectedModel] = useState<string>("llama3-70b-8192");
+  const [selectedModel, setSelectedModel] = useState<string>(
+    model ?? "llama3-70b-8192"
+  );
 
   const router = useRouter();
-
   useEffect(() => {
     const checkOwnership = async () => {
       try {
@@ -276,18 +279,16 @@ const Transcription: React.FC<TranscriptionProps> = ({
             </div>
             <div className="flex items-center justify-center pb-4">
               <Select
-                defaultValue="llama3-70b-8192"
+                value={selectedModel}
                 onValueChange={(value) => setSelectedModel(value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a model" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="llama3-70b-8192">LLama3</SelectItem>
-                  <SelectItem value="llama3-8b-8192">LLama2</SelectItem>
-                  <SelectItem value="llama3-13b-8192">
-                    Gemini 1.5 Flash
-                  </SelectItem>
+                  <SelectItem value="llama3-70b-8192">LLama3 70B</SelectItem>
+                  <SelectItem value="llama3-8b-8192">Llama3 8B</SelectItem>
+                  <SelectItem value="gemma-7b-it">Gemma 7B</SelectItem>
                 </SelectContent>
               </Select>
             </div>

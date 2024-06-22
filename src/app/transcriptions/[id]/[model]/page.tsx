@@ -13,6 +13,7 @@ import { ref, get } from "firebase/database";
 export default function TranscriptionPage() {
   const params = useParams();
   const id = params.id as string;
+  const model = params.model as string;
   const [user, loading] = useAuthState(auth);
   const [transcription, setTranscription] = useState<TranscriptionType | null>(
     null
@@ -54,7 +55,7 @@ export default function TranscriptionPage() {
   }
 
   return transcription ? (
-    <Transcription transcription={transcription} user={user!} />
+    <Transcription transcription={transcription} user={user!} model={model} />
   ) : (
     <Skeleton className="h-screen w-full" />
   );

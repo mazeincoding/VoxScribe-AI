@@ -13,7 +13,7 @@ import { ChevronRight } from "lucide-react";
 
 interface UploadSectionProps {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSampleClick: () => void;
+  onSampleClick: () => Promise<void>;
   loading: boolean;
   fileInputRef: React.RefObject<HTMLInputElement>;
 }
@@ -28,7 +28,7 @@ export default function UploadSection({
   const [user] = useAuthState(auth);
   const router = useRouter();
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (!user) {
       setIsSignupDialogOpen(true);
       return;
@@ -36,12 +36,12 @@ export default function UploadSection({
     fileInputRef.current?.click();
   };
 
-  const handleButtonClick = (action: () => void) => {
+  const handleButtonClick = async (action: () => Promise<void>) => {
     if (!user) {
       setIsSignupDialogOpen(true);
       return;
     }
-    action();
+    await action();
   };
 
   const handleTranscriptionsClick = () => {
@@ -62,7 +62,9 @@ export default function UploadSection({
         <div className="mt-8 flex flex-col sm:flex-row">
           <Button
             className="flex-1"
-            onClick={() => handleButtonClick(handleUploadClick)}
+            onClick={() =>
+              handleButtonClick(() => Promise.resolve(handleUploadClick()))
+            }
             disabled={loading}
           >
             Upload File

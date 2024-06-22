@@ -123,11 +123,14 @@ export default function LandingPage() {
 
   const handleSampleClick = async () => {
     try {
+      setIsUploading(true);
       const sampleRef = storageRef(storage, "sample.mp3");
       const sampleURL = await getDownloadURL(sampleRef);
-      handleFileUpload(sampleURL);
+      await handleFileUpload(sampleURL);
     } catch (error) {
       toast.error("Error loading sample file. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -136,7 +139,7 @@ export default function LandingPage() {
       <UploadSection
         onFileChange={handleFileChange}
         onSampleClick={handleSampleClick}
-        loading={loading}
+        loading={isUploading}
         fileInputRef={fileInputRef}
       />
       <div className="w-full lg:w-1/2 bg-background flex items-center justify-center">
