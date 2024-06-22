@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(request: Request) {
-  const { to, subject, text } = await request.json();
+  const { to, subject, text, html } = await request.json();
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     to,
     subject,
     text,
+    html, // Add this line to support HTML emails
   };
 
   try {
