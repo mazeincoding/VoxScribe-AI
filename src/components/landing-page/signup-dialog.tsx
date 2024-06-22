@@ -26,9 +26,11 @@ export default function SignupDialog({
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignupWithEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const result = await createUserWithEmailAndPassword(
         auth,
@@ -41,6 +43,8 @@ export default function SignupDialog({
       }
     } catch (error) {
       toast.error("Failed to sign up. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,8 +82,8 @@ export default function SignupDialog({
             />
           </div>
           <DialogFooter>
-            <Button className="w-full" type="submit">
-              Sign Up with Email
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              {isLoading ? "Signing Up..." : "Sign Up with Email"}
             </Button>
           </DialogFooter>
         </form>

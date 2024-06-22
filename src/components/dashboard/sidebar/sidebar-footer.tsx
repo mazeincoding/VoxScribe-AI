@@ -15,10 +15,11 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import FeedbackDialog from "./feedback-dialog"; // We'll create this component
 
 interface SidebarFooterProps {
   handleLogout: () => void;
-  setDropdownOpen: (isOpen: boolean) => void; // New prop
+  setDropdownOpen: (isOpen: boolean) => void;
 }
 
 const SidebarFooter: React.FC<SidebarFooterProps> = ({
@@ -27,6 +28,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
 }) => {
   const [user] = useAuthState(auth);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
 
   return (
     <>
@@ -40,6 +42,9 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
         <DropdownMenuContent className="w-52">
           <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
             Support Us
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setIsFeedbackDialogOpen(true)}>
+            Give Feedback
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={handleLogout}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
@@ -78,6 +83,11 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
           </div>
         </DialogContent>
       </Dialog>
+
+      <FeedbackDialog
+        isOpen={isFeedbackDialogOpen}
+        onClose={() => setIsFeedbackDialogOpen(false)}
+      />
     </>
   );
 };
