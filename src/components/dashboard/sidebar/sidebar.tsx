@@ -12,6 +12,7 @@ import SidebarNav from "./sidebar-nav";
 import SidebarFooter from "./sidebar-footer";
 import { Transcription } from "@/types/transcription";
 import { ref } from "firebase/database";
+import VideoUploadDialog from "@/components/dashboard/sidebar/video-upload-dialog"; // Import the new dialog component
 
 interface SidebarProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const [transcriptionsData, setTranscriptionsData] = useState<Transcription[]>([]);
   const [user, authLoading, authError] = useAuthState(auth);
   const [isDropdownOpen, setDropdownOpen] = useState(false); // New state
+  const [isVideoUploadDialogOpen, setVideoUploadDialogOpen] = useState(false); // New state
 
   const handleLogout = async () => {
     const success = await signOut();
@@ -50,7 +52,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       if (user?.uid) {
         const transcriptionsRef = ref(db, `users/${user.uid}/transcriptions`);
         const data = await readFromDatabase<Record<string, Transcription>>(transcriptionsRef);
-        console.log("Data:", data);
         const transcriptionsArray = data ? Object.values(data) : [];
         setTranscriptionsData(transcriptionsArray);
       }
@@ -87,9 +88,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           showTranscripts={showTranscripts}
           setShowTranscripts={setShowTranscripts}
           transcriptionsData={{ transcriptions: transcriptionsData }}
+          setVideoUploadDialogOpen={setVideoUploadDialogOpen} // Pass the handler
         />
         <SidebarFooter handleLogout={handleLogout} setDropdownOpen={setDropdownOpen} />
       </motion.div>
+      <VideoUploadDialog
+        isOpen={isVideoUploadDialogOpen}
+        onClose={() => setVideoUploadDialogOpen(false)}
+      />
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}

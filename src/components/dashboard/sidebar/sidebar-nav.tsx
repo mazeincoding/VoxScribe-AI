@@ -2,7 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarLink from "./sidebar-link";
 import SidebarTranscripts from "./sidebar-transcripts";
-import { FileText, Home } from "lucide-react";
+import { FileText, Home, Plus } from "lucide-react";
 import { Transcription } from "@/types/transcription";
 
 interface SidebarNavProps {
@@ -10,6 +10,7 @@ interface SidebarNavProps {
   showTranscripts: boolean;
   setShowTranscripts: (show: boolean) => void;
   transcriptionsData: { transcriptions: Transcription[] };
+  setVideoUploadDialogOpen: (isOpen: boolean) => void; // New prop
 }
 
 interface SubLink {
@@ -29,12 +30,18 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
   showTranscripts,
   setShowTranscripts,
   transcriptionsData = { transcriptions: [] },
+  setVideoUploadDialogOpen, // New prop
 }) => {
   const links: Link[] = [
     {
       label: "Transcriptions",
       href: "/transcriptions",
       icon: <FileText />,
+    },
+    {
+      label: "Create",
+      href: "/new-transcription",
+      icon: <Plus />,
     },
   ];
 
@@ -61,6 +68,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
               link={link}
               isOpen={isOpen}
               toggleTranscripts={toggleTranscripts}
+              setVideoUploadDialogOpen={setVideoUploadDialogOpen} // Pass the handler
             />
           ))}
         </AnimatePresence>

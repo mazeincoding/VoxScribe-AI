@@ -105,7 +105,7 @@ export default function LandingPage() {
       });
 
       toast.success("File processed successfully!");
-      router.push(`/dashboard/transcriptions/${id}`);
+      router.push(`/transcriptions/${id}`);
     } catch (error) {
       setUploadError("An unexpected error occurred. Please try again.");
       toast.error("An unexpected error occurred. Please try again.");

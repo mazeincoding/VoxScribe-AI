@@ -70,7 +70,7 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
         {sortedTranscriptions.map((transcript) => (
           <Link
             key={transcript.id}
-            href={`/dashboard/transcriptions/${transcript.id}`}
+            href={`/transcriptions/${transcript.id}`}
             className="block"
           >
             <motion.li

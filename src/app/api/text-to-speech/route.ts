@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import Groq from 'groq-sdk';
 import fetch from "node-fetch"; // Ensure you have node-fetch installed
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(req: NextRequest) {
-  const { audioURL } = await req.json();
+  const { audioURL, model = "whisper-large-v3" } = await req.json();
 
   if (!audioURL) {
     return NextResponse.json(
@@ -27,9 +25,9 @@ export async function POST(req: NextRequest) {
     // Create a file-like object from the buffer
     const file = new File([audioBuffer], "audio.mp3", { type: "audio/mpeg" });
 
-    const response = await openai.audio.transcriptions.create({
+    const response = await groq.audio.transcriptions.create({
       file,
-      model: "whisper-1",
+      model,
     });
 
     return NextResponse.json({ transcription: response.text });

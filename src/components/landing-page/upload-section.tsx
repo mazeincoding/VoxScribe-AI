@@ -33,7 +33,6 @@ export default function UploadSection({
       setIsSignupDialogOpen(true);
       return;
     }
-    console.log("Uploading file...");
     fileInputRef.current?.click();
   };
 

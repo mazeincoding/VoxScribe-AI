@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link"; // Import Link
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -14,12 +15,14 @@ interface SidebarLinkProps {
   };
   isOpen: boolean;
   toggleTranscripts: () => void;
+  setVideoUploadDialogOpen: (isOpen: boolean) => void; // New prop
 }
 
 const SidebarLink: React.FC<SidebarLinkProps> = ({
   link,
   isOpen,
   toggleTranscripts,
+  setVideoUploadDialogOpen,
 }) => {
   const pathname = usePathname();
   const isActive = (href: string) => {
@@ -30,29 +33,31 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
   };
   const router = useRouter();
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (link.label === "Transcriptions") {
+      toggleTranscripts();
+    } else if (link.label === "Create") {
+      setVideoUploadDialogOpen(true); // Open the dialog
+    } else {
+      router.push(link.href);
+    }
+  };
+
   return (
-    <motion.li
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className={cn(
-        "p-2 rounded-md cursor-pointer flex items-center justify-between",
-        {
-          "bg-gray-200": isActive(link.href),
-          "hover:bg-gray-100": !isActive(link.href),
-        }
-      )}
-    >
-      <div
-        className="flex items-center justify-between w-full cursor-pointer"
-        onClick={() => {
-          if (link.label === "Transcriptions") {
-            toggleTranscripts();
-          } else {
-            router.push(link.href);
+    <Link href={link.href} onClick={handleClick}>
+      <motion.li
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className={cn(
+          "p-2 rounded-md cursor-pointer flex items-center justify-between",
+          {
+            "bg-gray-200": isActive(link.href),
+            "hover:bg-gray-100": !isActive(link.href),
           }
-        }}
+        )}
       >
         <div className="flex items-center">
           <span className="flex-shrink-0">{link.icon}</span>
@@ -81,8 +86,8 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
             <ChevronRight />
           </Button>
         )}
-      </div>
-    </motion.li>
+      </motion.li>
+    </Link>
   );
 };
 
