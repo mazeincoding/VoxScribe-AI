@@ -136,7 +136,7 @@ const Transcription: React.FC<TranscriptionProps> = ({
   };
 
   useEffect(() => {
-    if (transcription.title === "Untitled" && !transcription.transcript) {
+    if (!transcription.transcript) {
       transcribeAudio();
     }
   }, [transcription, user.uid]);
