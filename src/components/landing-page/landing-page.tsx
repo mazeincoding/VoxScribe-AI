@@ -17,6 +17,9 @@ import UploadSection from "@/components/landing-page/upload-section";
 import PreviewDialog from "@/components/landing-page/preview-dialog";
 import { Transcription } from "@/types/transcription";
 import { v4 as uuidv4 } from "uuid";
+import Footer from "./footer";
+
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB in bytes
 
 export default function LandingPage() {
   const [audioURL, setAudioURL] = useState<string | null>(null);
@@ -32,6 +35,14 @@ export default function LandingPage() {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
+      if (file.type !== "audio/mpeg") {
+        toast.error("Please upload an MP3 file.");
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error("File size should not exceed 25 MB.");
+        return;
+      }
       const audioUrl = URL.createObjectURL(file);
       setAudioURL(audioUrl);
       setIsDialogOpen(true);
@@ -135,37 +146,40 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex w-full min-h-screen flex-col lg:flex-row">
-      <UploadSection
-        onFileChange={handleFileChange}
-        onSampleClick={handleSampleClick}
-        loading={isUploading}
-        fileInputRef={fileInputRef}
-      />
-      <div className="w-full lg:w-1/2 bg-background flex items-center justify-center min-h-[400px]">
-        <div className="relative w-full h-full p-10 flex justify-center items-center flex-col gap-4">
-          <h2 className="text-3xl font-bold text-primary">See in action</h2>
-          <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-            <iframe
-              src="https://player.vimeo.com/video/965432017?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-              className="absolute top-0 left-0 w-full h-full"
-              title="AI Powered Transcription tool. Format with AI."
-            ></iframe>
+    <>
+      <div className="flex w-full min-h-screen flex-col lg:flex-row">
+        <UploadSection
+          onFileChange={handleFileChange}
+          onSampleClick={handleSampleClick}
+          loading={isUploading}
+          fileInputRef={fileInputRef}
+        />
+        <div className="w-full lg:w-1/2 bg-background flex items-center justify-center min-h-[400px]">
+          <div className="relative w-full h-full p-10 flex justify-center items-center flex-col gap-4">
+            <h2 className="text-3xl font-bold text-primary">See in action</h2>
+            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+              <iframe
+                src="https://player.vimeo.com/video/965432017?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                className="absolute top-0 left-0 w-full h-full"
+                title="AI Powered Transcription tool. Format with AI."
+              ></iframe>
+            </div>
           </div>
         </div>
+        <PreviewDialog
+          isOpen={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          audioURL={audioURL}
+          uploadError={uploadError}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress}
+          onRetry={handleRetry}
+          onUpload={handleUpload}
+        />
       </div>
-      <PreviewDialog
-        isOpen={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        audioURL={audioURL}
-        uploadError={uploadError}
-        isUploading={isUploading}
-        uploadProgress={uploadProgress}
-        onRetry={handleRetry}
-        onUpload={handleUpload}
-      />
-    </div>
+      <Footer />
+    </>
   );
 }

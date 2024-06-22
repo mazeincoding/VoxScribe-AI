@@ -29,6 +29,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB in bytes
+
 interface VideoUploadDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -49,7 +51,16 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      setFile(files[0]);
+      const selectedFile = files[0];
+      if (selectedFile.type !== "audio/mpeg") {
+        toast.error("Please upload an MP3 file.");
+        return;
+      }
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        toast.error("File size should not exceed 25 MB.");
+        return;
+      }
+      setFile(selectedFile);
     }
   };
 
@@ -122,7 +133,7 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
           <div className="mb-4 w-full">
             <Input
               type="file"
-              accept="audio/*"
+              accept="audio/mpeg"
               ref={fileInputRef}
               onChange={handleFileChange}
               className="mb-4"
