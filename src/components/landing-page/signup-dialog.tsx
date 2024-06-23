@@ -63,6 +63,12 @@ export default function SignupDialog({
           <DialogTitle className="text-center text-2xl">Sign Up</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSignupWithEmail}>
+          <input
+            type="text"
+            style={{ position: "absolute", left: "-9999px" }}
+            tabIndex={-1}
+            autoFocus
+          />
           <div className="mb-4">
             <Input
               type="email"
