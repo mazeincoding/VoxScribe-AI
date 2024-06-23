@@ -8,15 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db, storage } from "@/firebase/config";
-import {
-  ref as storageRef,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { ref as dbRef, serverTimestamp, set } from "firebase/database";
-import { Transcription } from "@/types/transcription";
-import { v4 as uuidv4 } from "uuid";
+import { auth } from "@/firebase/config";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -28,8 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB in bytes
+import { validateFile, uploadFile, saveTranscription } from "@/lib/upload-helpers";
 
 interface VideoUploadDialogProps {
   isOpen: boolean;
@@ -52,15 +43,9 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
     const files = event.target.files;
     if (files && files.length > 0) {
       const selectedFile = files[0];
-      if (selectedFile.type !== "audio/mpeg") {
-        toast.error("Please upload an MP3 file.");
-        return;
+      if (validateFile(selectedFile)) {
+        setFile(selectedFile);
       }
-      if (selectedFile.size > MAX_FILE_SIZE) {
-        toast.error("File size should not exceed 25 MB.");
-        return;
-      }
-      setFile(selectedFile);
     }
   };
 
@@ -69,51 +54,11 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
 
     try {
       setIsUploading(true);
-      const fileExtension = file.name.split(".").pop() || "";
-      const fileNameWithoutExtension = file.name.replace(
-        `.${fileExtension}`,
-        ""
-      );
-      const storagePath = `users/${user.uid}/${fileNameWithoutExtension}.${fileExtension}`;
+      const downloadURL = await uploadFile(file, user.uid, setUploadProgress);
+      const id = await saveTranscription(user.uid, downloadURL);
 
-      const fileStorageRef = storageRef(storage, storagePath);
-      const uploadTask = uploadBytesResumable(fileStorageRef, file);
-
-      await new Promise<void>((resolve, reject) => {
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            setUploadProgress(progress);
-          },
-          reject,
-          async () => {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            const id = uuidv4();
-            const transcriptionRef = dbRef(
-              db,
-              `users/${user.uid}/transcriptions/${id}`
-            );
-            const transcription: Omit<Transcription, "createdAt"> = {
-              id,
-              title: "Untitled",
-              transcript: "",
-              audioURL: downloadURL,
-              userId: user.uid,
-            };
-
-            await set(transcriptionRef, {
-              ...transcription,
-              createdAt: serverTimestamp(),
-            });
-
-            toast.success("File uploaded successfully!");
-            router.push(`/transcriptions/${id}/${selectedModel}`);
-            resolve();
-          }
-        );
-      });
+      toast.success("File uploaded successfully!");
+      router.push(`/transcriptions/${id}/${selectedModel}`);
     } catch (error) {
       toast.error("An error occurred during upload. Please try again.");
     } finally {
@@ -133,7 +78,7 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
           <div className="mb-4 w-full">
             <Input
               type="file"
-              accept="audio/mpeg"
+              accept="audio/mpeg,video/mp4,video/quicktime,video/webm"
               ref={fileInputRef}
               onChange={handleFileChange}
               className="mb-4"

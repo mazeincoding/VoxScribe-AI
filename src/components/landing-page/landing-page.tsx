@@ -2,56 +2,45 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { db, storage } from "@/firebase/config";
-import {
-  getDownloadURL,
-  ref as storageRef,
-  uploadBytesResumable,
-} from "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { ref as dbRef, serverTimestamp, set } from "firebase/database";
-import { auth } from "@/firebase/config";
+import { auth, storage } from "@/firebase/config";
 import { toast } from "react-hot-toast";
+import { getDownloadURL, ref as storageRef } from "firebase/storage";
 import UploadSection from "@/components/landing-page/upload-section";
 import PreviewDialog from "@/components/landing-page/preview-dialog";
-import { Transcription } from "@/types/transcription";
-import { v4 as uuidv4 } from "uuid";
 import Footer from "./footer";
+import { validateFile, uploadFile, saveTranscription, convertToMp3 } from "@/lib/upload-helpers";
 
-const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25 MB in bytes
-
-export default function LandingPage() {
+const LandingPage = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const fileInputRef = useRef<HTMLInputElement>(null); // Define the ref here
-  const [user, loading] = useAuthState(auth);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [user] = useAuthState(auth);
   const router = useRouter();
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      if (file.type !== "audio/mpeg") {
-        toast.error("Please upload an MP3 file.");
-        return;
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && validateFile(file)) {
+      let processedFile = file;
+      if (file.type.startsWith('video/')) {
+        setIsUploading(true);
+        toast.loading('Converting video to audio...');
+        try {
+          processedFile = await convertToMp3(file);
+          toast.success('Video converted successfully!');
+        } catch (error) {
+          toast.error('Error converting video. Please try again.');
+          setIsUploading(false);
+          return;
+        }
       }
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size should not exceed 25 MB.");
-        return;
-      }
-      const audioUrl = URL.createObjectURL(file);
-      setAudioURL(audioUrl);
+      setAudioURL(URL.createObjectURL(processedFile));
       setIsDialogOpen(true);
+      setIsUploading(false);
     }
-  };
-
-  const handleRetry = () => {
-    setAudioURL(null);
-    setIsDialogOpen(false);
-    setUploadError(null);
   };
 
   const handleFileUpload = async (fileOrUrl: File | string) => {
@@ -64,55 +53,12 @@ export default function LandingPage() {
       setIsUploading(true);
       setUploadError(null);
 
-      let downloadURL = "";
+      const downloadURL =
+        typeof fileOrUrl === "string"
+          ? fileOrUrl
+          : await uploadFile(fileOrUrl, user.uid, setUploadProgress);
 
-      if (typeof fileOrUrl === "string") {
-        downloadURL = fileOrUrl;
-      } else {
-        const fileExtension = fileOrUrl.name.split(".").pop() || "";
-        const fileNameWithoutExtension = fileOrUrl.name.replace(
-          `.${fileExtension}`,
-          ""
-        );
-        const storagePath = `users/${user.uid}/${fileNameWithoutExtension}.${fileExtension}`;
-
-        const fileStorageRef = storageRef(storage, storagePath);
-        const uploadTask = uploadBytesResumable(fileStorageRef, fileOrUrl);
-
-        await new Promise<void>((resolve, reject) => {
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              setUploadProgress(progress);
-            },
-            reject,
-            async () => {
-              downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              resolve();
-            }
-          );
-        });
-      }
-
-      const id = uuidv4();
-      const transcriptionRef = dbRef(
-        db,
-        `users/${user.uid}/transcriptions/${id}`
-      );
-      const transcription: Omit<Transcription, "createdAt"> = {
-        id,
-        title: "Untitled",
-        transcript: "",
-        audioURL: downloadURL,
-        userId: user.uid,
-      };
-
-      await set(transcriptionRef, {
-        ...transcription,
-        createdAt: serverTimestamp(),
-      });
+      const id = await saveTranscription(user.uid, downloadURL);
 
       toast.success("File processed successfully!");
       router.push(`/transcriptions/${id}`);
@@ -126,16 +72,13 @@ export default function LandingPage() {
 
   const handleUpload = () => {
     const file = fileInputRef.current?.files?.[0];
-    if (file) {
-      handleFileUpload(file);
-    }
+    if (file) handleFileUpload(file);
   };
 
   const handleSampleClick = async () => {
     try {
       setIsUploading(true);
-      const sampleRef = storageRef(storage, "sample.mp3");
-      const sampleURL = await getDownloadURL(sampleRef);
+      const sampleURL = await getDownloadURL(storageRef(storage, "sample.mp3"));
       await handleFileUpload(sampleURL);
     } catch (error) {
       toast.error("Error loading sample file. Please try again.");
@@ -163,7 +106,7 @@ export default function LandingPage() {
                 allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
                 className="absolute top-0 left-0 w-full h-full"
                 title="AI Powered Transcription tool. Format with AI."
-              ></iframe>
+              />
             </div>
           </div>
         </div>
@@ -174,11 +117,17 @@ export default function LandingPage() {
           uploadError={uploadError}
           isUploading={isUploading}
           uploadProgress={uploadProgress}
-          onRetry={handleRetry}
+          onRetry={() => {
+            setAudioURL(null);
+            setIsDialogOpen(false);
+            setUploadError(null);
+          }}
           onUpload={handleUpload}
         />
       </div>
       <Footer />
     </>
   );
-}
+};
+
+export default LandingPage;

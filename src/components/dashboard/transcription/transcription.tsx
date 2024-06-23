@@ -16,16 +16,16 @@ import { Transcription as TranscriptionType } from "@/types/transcription";
 import { db, updateDatabase } from "@/firebase/config";
 import { ref, get } from "firebase/database";
 import { User } from "firebase/auth";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Input } from "../../ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../ui/select";
+} from "@/components/ui/select";
 
 interface TranscriptionProps {
   transcription: TranscriptionType;
@@ -52,6 +52,7 @@ const Transcription: React.FC<TranscriptionProps> = ({
   const [selectedModel, setSelectedModel] = useState<string>(
     model ?? "llama3-70b-8192"
   );
+  const [language, setLanguage] = useState<string>("auto"); // Default to auto-detect
 
   const router = useRouter();
   useEffect(() => {
@@ -82,18 +83,24 @@ const Transcription: React.FC<TranscriptionProps> = ({
     try {
       const response = await fetch("/api/text-to-speech", {
         method: "POST",
-        body: JSON.stringify({ audioURL: transcription.audioURL }),
+        body: JSON.stringify({ audioURL: transcription.audioURL, language }),
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = await response.json();
       if (response.ok) {
+        // If language was set to "auto", update the language state with the detected language
+        if (language === "auto" && data.detectedLanguage) {
+          setLanguage(data.detectedLanguage);
+        }
+
         const formattedResponse = await fetch("/api/format-text", {
           method: "POST",
           body: JSON.stringify({
             text: data.transcription,
             rephrase: false,
+            language: data.detectedLanguage || language,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -106,7 +113,10 @@ const Transcription: React.FC<TranscriptionProps> = ({
 
           const titleResponse = await fetch("/api/generate-title", {
             method: "POST",
-            body: JSON.stringify({ text: formattedData.formattedText }),
+            body: JSON.stringify({
+              text: formattedData.formattedText,
+              language: data.detectedLanguage || language,
+            }),
             headers: {
               "Content-Type": "application/json",
               model: selectedModel,
@@ -248,6 +258,23 @@ const Transcription: React.FC<TranscriptionProps> = ({
     }
   };
 
+  // Add a language selector component
+  const LanguageSelector = () => (
+    <Select value={language} onValueChange={setLanguage}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Language" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="auto">Auto</SelectItem>
+        <SelectItem value="en">English</SelectItem>
+        <SelectItem value="de">German</SelectItem>
+        <SelectItem value="fr">French</SelectItem>
+        <SelectItem value="es">Spanish</SelectItem>
+        <SelectItem value="it">Italian</SelectItem>
+      </SelectContent>
+    </Select>
+  );
+
   return (
     <div className="flex h-screen">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
@@ -277,7 +304,7 @@ const Transcription: React.FC<TranscriptionProps> = ({
                 Edit
               </Button>
             </div>
-            <div className="flex items-center justify-center pb-4">
+            <div className="flex items-center justify-center pb-4 space-x-2">
               <Select
                 value={selectedModel}
                 onValueChange={(value) => setSelectedModel(value)}
@@ -291,6 +318,7 @@ const Transcription: React.FC<TranscriptionProps> = ({
                   <SelectItem value="gemma-7b-it">Gemma 7B</SelectItem>
                 </SelectContent>
               </Select>
+              <LanguageSelector />
             </div>
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

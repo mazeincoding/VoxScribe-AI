@@ -1,11 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import Groq from 'groq-sdk';
-import fetch from "node-fetch"; // Ensure you have node-fetch installed
+import Groq from "groq-sdk";
+import fetch from "node-fetch";
+import LanguageDetect from "languagedetect";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const lngDetector = new (LanguageDetect as any)();
+
+const languageMap: { [key: string]: string } = {
+  english: "en",
+  german: "de",
+  french: "fr",
+  spanish: "es",
+  italian: "it",
+};
 
 export async function POST(req: NextRequest) {
-  const { audioURL, model = "whisper-large-v3" } = await req.json();
+  const {
+    audioURL,
+    model = "whisper-large-v3",
+    language = "auto",
+  } = await req.json();
 
   if (!audioURL) {
     return NextResponse.json(
@@ -15,22 +29,34 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Fetch the audio file from the URL
     const audioResponse = await fetch(audioURL);
     if (!audioResponse.ok) {
       throw new Error("Failed to fetch audio file");
     }
     const audioBuffer = await audioResponse.buffer();
 
-    // Create a file-like object from the buffer
     const file = new File([audioBuffer], "audio.mp3", { type: "audio/mpeg" });
 
     const response = await groq.audio.transcriptions.create({
       file,
       model,
+      language: language === "auto" ? undefined : languageMap[language] || "en",
     });
 
-    return NextResponse.json({ transcription: response.text });
+    let detectedLanguage = "en";
+    if (language === "auto") {
+      const detectedLangs = lngDetector.detect(response.text);
+      detectedLanguage = detectedLangs[0]?.[0] || "english";
+    } else {
+      detectedLanguage = language;
+    }
+
+    const mappedLanguage = languageMap[detectedLanguage.toLowerCase()] || "en";
+
+    return NextResponse.json({
+      transcription: response.text,
+      detectedLanguage: mappedLanguage,
+    });
   } catch (error) {
     console.error("Error transcribing audio:", error);
     return NextResponse.json(

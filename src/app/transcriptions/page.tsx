@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import Sidebar from "@/components/dashboard/sidebar/sidebar";
 import { Menu } from "lucide-react";
+import { FeaturesDialog } from "@/components/features-dialog";
 
 const TranscriptionsPage = () => {
   const [user, loading, error] = useAuthState(auth);
@@ -116,10 +117,10 @@ const TranscriptionsPage = () => {
           <Menu className="h-6 w-6" />
         </Button>
         {renderContent()}
+        <FeaturesDialog />
       </main>
     </div>
   );
 };
 
 export default TranscriptionsPage;
-

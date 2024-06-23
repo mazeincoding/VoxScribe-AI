@@ -9,6 +9,7 @@ import { Transcription as TranscriptionType } from "@/types/transcription";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "react-hot-toast";
 import { ref, get } from "firebase/database";
+import { FeaturesDialog } from "@/components/features-dialog";
 
 export default function TranscriptionPage() {
   const params = useParams();
@@ -54,7 +55,10 @@ export default function TranscriptionPage() {
   }
 
   return transcription ? (
-    <Transcription transcription={transcription} user={user!} />
+    <>
+      <Transcription transcription={transcription} user={user!} />
+      <FeaturesDialog />
+    </>
   ) : (
     <Skeleton className="h-screen w-full" />
   );

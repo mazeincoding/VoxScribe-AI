@@ -4,13 +4,13 @@ import Groq from 'groq-sdk';
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function POST(req: NextRequest) {
-  const { text, model = "llama3-70b-8192" } = await req.json();
+  const { text, model = "llama3-70b-8192", language = "en" } = await req.json();
 
   if (!text) {
     return NextResponse.json({ error: "Text is required" }, { status: 400 });
   }
 
-  const instructions = "Generate a concise and descriptive title for the following text. Do not use any emojis or quotes/double quotes. Only have the title in your response.";
+  const instructions = `Generate a concise and descriptive title for the following text in the original language (${language}). Do not use any emojis or quotes/double quotes. Only have the title in your response.`;
 
   try {
     const chatCompletion = await groq.chat.completions.create({
