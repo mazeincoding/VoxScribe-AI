@@ -40,7 +40,11 @@ export default function SignupDialog({
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       if (result.user) {
         handleSignupSuccess();
       }

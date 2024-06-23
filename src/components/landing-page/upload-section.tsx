@@ -12,6 +12,7 @@ import { Input } from "../ui/input";
 interface UploadSectionProps {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSampleClick: () => void;
+  onUploadClick: () => void; // Added this new prop
   loading: boolean;
   fileInputRef: React.RefObject<HTMLInputElement>;
   user: any | null;
@@ -20,6 +21,7 @@ interface UploadSectionProps {
 const UploadSection: React.FC<UploadSectionProps> = ({
   onFileChange,
   onSampleClick,
+  onUploadClick, // Using this new prop
   loading,
   fileInputRef,
   user,
@@ -48,7 +50,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({
       <div className="flex flex-col sm:flex-row w-full gap-4 mb-4">
         <Button
           className="flex-1 bg-white text-purple-600 hover:bg-purple-100 transition-colors duration-300"
-          onClick={handleUploadClick}
+          onClick={onUploadClick} // Using this new prop
           disabled={loading}
         >
           <UploadIcon className="mr-2 h-4 w-4" />

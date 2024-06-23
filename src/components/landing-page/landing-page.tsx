@@ -97,12 +97,21 @@ const LandingPage = () => {
     }
   };
 
+  const handleUploadClick = () => {
+    if (user) {
+      fileInputRef.current?.click();
+    } else {
+      setIsSignupDialogOpen(true);
+    }
+  };
+
   return (
     <>
       <div className="flex w-full min-h-screen flex-col lg:flex-row">
         <UploadSection
           onFileChange={handleFileChange}
           onSampleClick={handleSampleClick}
+          onUploadClick={handleUploadClick}
           loading={isUploading}
           fileInputRef={fileInputRef}
           user={user}
@@ -140,7 +149,10 @@ const LandingPage = () => {
       <SignupDialog
         isOpen={isSignupDialogOpen}
         onClose={() => setIsSignupDialogOpen(false)}
-        onSuccess={handleSampleUpload}
+        onSuccess={() => {
+          setIsSignupDialogOpen(false);
+          fileInputRef.current?.click();
+        }}
       />
     </>
   );
