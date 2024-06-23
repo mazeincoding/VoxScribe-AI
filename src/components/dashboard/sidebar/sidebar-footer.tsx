@@ -42,14 +42,14 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-52">
-          <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
-            Support Us
+          <DropdownMenuItem onSelect={() => router.push("/settings")}>
+            Settings
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setIsFeedbackDialogOpen(true)}>
             Give Feedback
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => router.push("/settings")}>
-            Settings
+          <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
+            Support Us
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={handleLogout}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
