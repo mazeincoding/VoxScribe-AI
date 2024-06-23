@@ -63,16 +63,14 @@ export const FeaturesDialog = () => {
         <DialogHeader>
           <DialogTitle>New Features!</DialogTitle>
           <DialogDescription>
-            Check out what's new in this update:
+            Check out what&apos;s new in this update:
           </DialogDescription>
         </DialogHeader>
         <FeaturesList />
         <p className="text-sm text-gray-500">
-          That's all we've got for now, folks!
+          That&apos;s all we&apos;ve got for now, folks!
         </p>
-        <Button onClick={handleClose}>
-          Got it, thanks!
-        </Button>
+        <Button onClick={handleClose}>Got it, thanks!</Button>
       </DialogContent>
     </Dialog>
   );
