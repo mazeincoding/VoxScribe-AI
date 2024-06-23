@@ -18,14 +18,14 @@ import { ref, get } from "firebase/database";
 import { User } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 
 interface TranscriptionProps {
   transcription: TranscriptionType;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Transcription from "@/components/dashboard/transcription";
+import Transcription from "@/components/dashboard/transcription/transcription";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "@/firebase/config";
 import { useEffect, useState } from "react";
