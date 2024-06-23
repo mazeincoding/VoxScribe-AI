@@ -91,7 +91,7 @@ export default function UploadSection({
             className="flex-1 w-full mt-3"
             onClick={handleTranscriptionsClick}
           >
-            My Transcriptions
+            My Dashboard
             <ChevronRight className="h-4 w-4" />
           </Button>
         )}

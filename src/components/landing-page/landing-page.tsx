@@ -12,7 +12,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { ref as dbRef, serverTimestamp, set } from "firebase/database";
 import { auth } from "@/firebase/config";
 import { toast } from "react-hot-toast";
-import { Skeleton } from "@/components/ui/skeleton";
 import UploadSection from "@/components/landing-page/upload-section";
 import PreviewDialog from "@/components/landing-page/preview-dialog";
 import { Transcription } from "@/types/transcription";

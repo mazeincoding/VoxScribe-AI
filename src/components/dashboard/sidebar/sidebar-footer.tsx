@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { User } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/navigation";
 import { auth } from "@/firebase/config";
 import {
   DropdownMenu,
@@ -29,6 +30,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
   const [user] = useAuthState(auth);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <>
@@ -45,6 +47,9 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setIsFeedbackDialogOpen(true)}>
             Give Feedback
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => router.push("/settings")}>
+            Settings
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={handleLogout}>Logout</DropdownMenuItem>
         </DropdownMenuContent>

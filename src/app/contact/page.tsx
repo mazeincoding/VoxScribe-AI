@@ -6,7 +6,7 @@ import { ref } from "firebase/database";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Label } from "@/components/ui/label";
 
 interface ContactFormData {
@@ -100,18 +100,11 @@ Your Contact Form System
         throw new Error("Failed to send email");
       }
 
-      toast({
-        title: "Success",
-        description: "Thank you for your message. We'll get back to you soon!",
-      });
+      toast.success("Thank you for your message. We'll get back to you soon!");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast({
-        title: "Error",
-        description: "An error occurred. Please try again later.",
-        variant: "destructive",
-      });
+      toast.error("An error occurred. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
