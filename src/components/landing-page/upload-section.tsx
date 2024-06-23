@@ -7,6 +7,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
 import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Input } from "../ui/input";
 
 interface UploadSectionProps {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -33,21 +34,21 @@ const UploadSection: React.FC<UploadSectionProps> = ({
   };
 
   return (
-    <div className="w-full lg:w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 rounded-lg shadow-xl">
-      <h1 className="text-4xl font-bold mb-4 text-white">
+    <div className="w-full py-16 lg:px-16 lg:w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 shadow-xl">
+      <h1 className="text-4xl w-full text-center font-bold mb-4 text-white">
         Upload Your Audio or Video
       </h1>
-      <p className="text-lg mb-6 text-white opacity-80">
+      <p className="text-lg w-full text-center mb-6 text-white opacity-80">
         Upload an MP3 audio file or MP4/MOV/WebM video file to get started
       </p>
-      <input
+      <Input
         type="file"
         accept="audio/mpeg,video/mp4,video/quicktime,video/webm"
         onChange={onFileChange}
         className="hidden"
         ref={fileInputRef}
       />
-      <div className="flex flex-col sm:flex-row w-full max-w-md gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row w-full gap-4 mb-4">
         <Button
           className="flex-1 bg-white text-purple-600 hover:bg-purple-100 transition-colors duration-300"
           onClick={handleUploadClick}
@@ -68,7 +69,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({
       {user && (
         <Button
           variant="outline"
-          className="w-full max-w-md bg-transparent bg-white/25 border-white text-white hover:bg-white hover:text-purple-600 transition-colors duration-300"
+          className="w-full bg-transparent bg-white/25 border-white text-white hover:bg-white hover:text-purple-600 transition-colors duration-300"
           onClick={handleTranscriptionsClick}
         >
           My Dashboard
