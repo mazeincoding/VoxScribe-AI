@@ -10,9 +10,9 @@ const TermsOfServicePage: React.FC = () => {
         </CardHeader>
         <CardContent>
           <p className="mb-4">
-            These Terms of Service ("Terms") govern your access to and use of
-            VoxScribe's website and services. By using our services, you agree
-            to be bound by these Terms.
+            These Terms of Service (&quot;Terms&quot;) govern your access to and
+            use of VoxScribe&apos;s website and services. By using our services,
+            you agree to be bound by these Terms.
           </p>
           <h2 className="text-2xl font-semibold mb-2">Use of Services</h2>
           <p className="mb-4">
