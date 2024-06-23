@@ -20,26 +20,29 @@ import toast from "react-hot-toast";
 export default function SignupDialog({
   isOpen,
   onClose,
+  onSuccess,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleSignupSuccess = () => {
+    onClose();
+    toast.success("Wohoo! You can now start transcribing.");
+    onSuccess();
+  };
+
   const handleSignupWithEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const result = await createUserWithEmailAndPassword(auth, email, password);
       if (result.user) {
-        onClose();
-        toast.success("Wohoo! You can now start transcribing.");
+        handleSignupSuccess();
       }
     } catch (error) {
       toast.error("Failed to sign up. Please try again.");
@@ -49,10 +52,13 @@ export default function SignupDialog({
   };
 
   const handleSignupWithGoogle = async () => {
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    if (result.user) {
-      onClose();
-      toast.success("Wohoo! You can now start transcribing.");
+    try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      if (result.user) {
+        handleSignupSuccess();
+      }
+    } catch (error) {
+      toast.error("Failed to sign up with Google. Please try again.");
     }
   };
 

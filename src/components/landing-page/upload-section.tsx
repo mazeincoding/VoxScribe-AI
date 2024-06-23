@@ -11,9 +11,10 @@ import { Input } from "../ui/input";
 
 interface UploadSectionProps {
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSampleClick: () => Promise<void>;
+  onSampleClick: () => void;
   loading: boolean;
   fileInputRef: React.RefObject<HTMLInputElement>;
+  user: any | null;
 }
 
 const UploadSection: React.FC<UploadSectionProps> = ({
@@ -21,20 +22,16 @@ const UploadSection: React.FC<UploadSectionProps> = ({
   onSampleClick,
   loading,
   fileInputRef,
+  user,
 }) => {
-  const [user] = useAuthState(auth);
   const router = useRouter();
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handleTranscriptionsClick = () => {
-    router.push("/dashboard");
-  };
-
   return (
-    <div className="w-full py-16 lg:px-16 lg:w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 shadow-xl">
+    <div className="w-full py-16 lg:px-20 lg:w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 shadow-xl">
       <h1 className="text-4xl w-full text-center font-bold mb-4 text-white">
         Upload Your Audio or Video
       </h1>
@@ -59,7 +56,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({
         </Button>
         <Button
           variant="outline"
-          className="flex-1 bg-transparent bg-white/25 border-white text-white hover:bg-white hover:text-purple-600 transition-colors duration-300"
+          className="flex-1 bg-white/25 border-white text-white hover:bg-white hover:text-purple-600 transition-colors duration-300"
           onClick={onSampleClick}
           disabled={loading}
         >
@@ -69,14 +66,14 @@ const UploadSection: React.FC<UploadSectionProps> = ({
       {user && (
         <Button
           variant="outline"
-          className="w-full bg-transparent bg-white/25 border-white text-white hover:bg-white hover:text-purple-600 transition-colors duration-300"
-          onClick={handleTranscriptionsClick}
+          className="w-full bg-white/25 border-white text-white hover:bg-white hover:text-purple-600 transition-colors duration-300"
+          onClick={() => router.push("/transcriptions")}
         >
           My Dashboard
           <ChevronRight className="h-4 w-4 ml-2" />
         </Button>
       )}
-      <div className="mt-8 flex flex-col gap-6">
+      <div className="mt-8 w-full flex flex-col gap-6">
         <Feature
           icon={<UploadIcon className="h-8 w-8 text-white" />}
           title="Easy Upload"

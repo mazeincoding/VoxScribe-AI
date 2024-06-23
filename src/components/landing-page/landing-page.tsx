@@ -10,6 +10,7 @@ import UploadSection from "@/components/landing-page/upload-section";
 import PreviewDialog from "@/components/landing-page/preview-dialog";
 import Footer from "./footer";
 import { validateFile, uploadFile, saveTranscription, convertToMp3 } from "@/lib/upload-helpers";
+import SignupDialog from "@/components/landing-page/signup-dialog";
 
 const LandingPage = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
@@ -20,6 +21,7 @@ const LandingPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [user] = useAuthState(auth);
   const router = useRouter();
+  const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -75,7 +77,15 @@ const LandingPage = () => {
     if (file) handleFileUpload(file);
   };
 
-  const handleSampleClick = async () => {
+  const handleSampleClick = () => {
+    if (user) {
+      handleSampleUpload();
+    } else {
+      setIsSignupDialogOpen(true);
+    }
+  };
+
+  const handleSampleUpload = async () => {
     try {
       setIsUploading(true);
       const sampleURL = await getDownloadURL(storageRef(storage, "sample.mp3"));
@@ -95,6 +105,7 @@ const LandingPage = () => {
           onSampleClick={handleSampleClick}
           loading={isUploading}
           fileInputRef={fileInputRef}
+          user={user}
         />
         <div className="w-full lg:w-1/2 bg-background flex items-center justify-center min-h-[400px]">
           <div className="relative w-full h-full p-10 flex justify-center items-center flex-col gap-4">
@@ -126,6 +137,11 @@ const LandingPage = () => {
         />
       </div>
       <Footer />
+      <SignupDialog
+        isOpen={isSignupDialogOpen}
+        onClose={() => setIsSignupDialogOpen(false)}
+        onSuccess={handleSampleUpload}
+      />
     </>
   );
 };
