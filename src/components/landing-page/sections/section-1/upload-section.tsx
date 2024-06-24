@@ -35,7 +35,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({
   return (
     <div className="w-full py-16 lg:px-20 lg:w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 shadow-xl">
       <h1 className="text-4xl w-full text-center font-bold mb-4 text-white">
-        Transcribe and Format with AI
+        The #1 AI-powered transcription app that smartly formats your audio.
       </h1>
       <p className="text-lg w-full text-center mb-6 text-white opacity-80">
         Say goodbye to unreadable transcriptions. Meet VoxScribe -{" "}
