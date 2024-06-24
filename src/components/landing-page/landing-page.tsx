@@ -6,11 +6,20 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, storage } from "@/firebase/config";
 import { toast } from "react-hot-toast";
 import { getDownloadURL, ref as storageRef } from "firebase/storage";
-import UploadSection from "@/components/landing-page/upload-section";
-import PreviewDialog from "@/components/landing-page/preview-dialog";
+import UploadSection from "@/components/landing-page/sections/section-1/upload-section";
+import PreviewDialog from "@/components/landing-page/sections/section-1/preview-dialog";
 import Footer from "./footer";
-import { validateFile, uploadFile, saveTranscription, convertToMp3 } from "@/lib/upload-helpers";
+import {
+  validateFile,
+  uploadFile,
+  saveTranscription,
+  convertToMp3,
+} from "@/lib/upload-helpers";
 import SignupDialog from "@/components/landing-page/signup-dialog";
+import Header from "./header";
+import ReadabilitySection from "./sections/section-2/readability-section";
+import WhySection from "./sections/section-3/why-section";
+import Section4 from "./sections/section-4/section-4";
 
 const LandingPage = () => {
   const [audioURL, setAudioURL] = useState<string | null>(null);
@@ -23,18 +32,20 @@ const LandingPage = () => {
   const router = useRouter();
   const [isSignupDialogOpen, setIsSignupDialogOpen] = useState(false);
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file && validateFile(file)) {
       let processedFile = file;
-      if (file.type.startsWith('video/')) {
+      if (file.type.startsWith("video/")) {
         setIsUploading(true);
-        toast.loading('Converting video to audio...');
+        toast.loading("Converting video to audio...");
         try {
           processedFile = await convertToMp3(file);
-          toast.success('Video converted successfully!');
+          toast.success("Video converted successfully!");
         } catch (error) {
-          toast.error('Error converting video. Please try again.');
+          toast.error("Error converting video. Please try again.");
           setIsUploading(false);
           return;
         }
@@ -107,6 +118,7 @@ const LandingPage = () => {
 
   return (
     <>
+      <Header />
       <div className="flex w-full min-h-screen flex-col lg:flex-row">
         <UploadSection
           onFileChange={handleFileChange}
@@ -145,6 +157,9 @@ const LandingPage = () => {
           onUpload={handleUpload}
         />
       </div>
+      <ReadabilitySection />
+      <WhySection />
+      <Section4 user={user ?? null} />
       <Footer />
       <SignupDialog
         isOpen={isSignupDialogOpen}
