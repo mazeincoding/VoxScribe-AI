@@ -33,10 +33,10 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
   const router = useRouter();
 
   return (
-    <>
+    <div className="absolute bottom-0 left-0 right-0 bg-background z-10 border-t">
       <DropdownMenu onOpenChange={setDropdownOpen}>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center p-2 cursor-pointer hover:bg-gray-100 overflow-hidden">
+          <div className="flex items-center p-4 cursor-pointer hover:bg-gray-100 overflow-hidden">
             <User className="mr-2" />
             <span className="flex-1 truncate">{user?.email}</span>
           </div>
@@ -93,7 +93,7 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
         isOpen={isFeedbackDialogOpen}
         onClose={() => setIsFeedbackDialogOpen(false)}
       />
-    </>
+    </div>
   );
 };
 

@@ -57,7 +57,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({
       transition={{ duration: 0.2, ease: "easeInOut" }}
     >
       <motion.ul
-        className="absolute top-0 left-0 w-full"
+        className="absolute top-0 left-0 w-full overflow-y-auto"
         animate={{ opacity: showTranscripts ? 0 : 1 }}
         transition={{ duration: 0.2 }}
       >

@@ -67,7 +67,7 @@ const TranscriptionsPage = () => {
 
     return (
       <>
-        <h1 className="text-2xl font-bold mb-4 text-center text-slate-800">
+        <h1 className="text-2xl font-bold mb-4 text-center text-slate-8000">
           My Transcriptions
         </h1>
         <Input
@@ -80,7 +80,7 @@ const TranscriptionsPage = () => {
         {filteredTranscriptions.length === 0 ? (
           <p>No transcriptions found.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredTranscriptions.map((transcription) => (
               <Card
                 key={transcription.id}
@@ -108,7 +108,7 @@ const TranscriptionsPage = () => {
   return (
     <div className="flex h-screen">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <main className="flex-1 container p-4">
+      <main className="flex-1 container p-4 overflow-y-auto">
         <Button
           className="lg:hidden mb-4"
           variant="outline"

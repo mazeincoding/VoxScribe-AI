@@ -24,7 +24,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [showTranscripts, setShowTranscripts] = useState(false);
-  const [transcriptionsData, setTranscriptionsData] = useState<Transcription[]>([]);
+  const [transcriptionsData, setTranscriptionsData] = useState<Transcription[]>(
+    []
+  );
   const [user, authLoading, authError] = useAuthState(auth);
   const [isDropdownOpen, setDropdownOpen] = useState(false); // New state
   const [isVideoUploadDialogOpen, setVideoUploadDialogOpen] = useState(false); // New state
@@ -51,7 +53,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     const fetchTranscriptions = async () => {
       if (user?.uid) {
         const transcriptionsRef = ref(db, `users/${user.uid}/transcriptions`);
-        const data = await readFromDatabase<Record<string, Transcription>>(transcriptionsRef);
+        const data = await readFromDatabase<Record<string, Transcription>>(
+          transcriptionsRef
+        );
         const transcriptionsArray = data ? Object.values(data) : [];
         setTranscriptionsData(transcriptionsArray);
       }
@@ -64,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     <>
       <motion.div
         className={cn(
-          "fixed -translate-x-full transition-transform lg:translate-x-0 shadow-lg bg-background z-50 lg:static h-full text-black flex flex-col border-r p-4 flex-shrink-0 overflow-hidden",
+          "fixed -translate-x-full transition-transform lg:translate-x-0 shadow-lg bg-background z-50 lg:static h-full text-black flex flex-col border-r flex-shrink-0 overflow-hidden",
           {
             "lg:w-[80px]": !isOpen,
             "lg:w-64 translate-x-0": isOpen,
@@ -82,15 +86,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           }
         }}
       >
-        <SidebarHeader isOpen={isOpen} />
-        <SidebarNav
-          isOpen={isOpen}
-          showTranscripts={showTranscripts}
-          setShowTranscripts={setShowTranscripts}
-          transcriptionsData={{ transcriptions: transcriptionsData }}
-          setVideoUploadDialogOpen={setVideoUploadDialogOpen} // Pass the handler
-        />
-        <SidebarFooter handleLogout={handleLogout} setDropdownOpen={setDropdownOpen} />
+        <div className="flex flex-col h-full relative p-4">
+          <SidebarHeader isOpen={isOpen} />
+          <SidebarNav
+            isOpen={isOpen}
+            showTranscripts={showTranscripts}
+            setShowTranscripts={setShowTranscripts}
+            transcriptionsData={{ transcriptions: transcriptionsData }}
+            setVideoUploadDialogOpen={setVideoUploadDialogOpen}
+          />
+          <SidebarFooter
+            handleLogout={handleLogout}
+            setDropdownOpen={setDropdownOpen}
+          />
+        </div>
       </motion.div>
       <VideoUploadDialog
         isOpen={isVideoUploadDialogOpen}

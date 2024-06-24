@@ -286,102 +286,104 @@ const Transcription: React.FC<TranscriptionProps> = ({
         >
           <Menu className="cursor-pointer text-lg" />
         </Button>
-        <Card className="flex-1 flex flex-col relative">
-          <CardHeader className="pb-2 pt-4 flex flex-col items-center justify-between">
-            <div className="flex space-x-2 mb-2 w-full justify-center">
-              <Button
-                variant={activeTab === "view" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveTab("view")}
-              >
-                View
-              </Button>
-              <Button
-                variant={activeTab === "edit" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveTab("edit")}
-              >
-                Edit
-              </Button>
-            </div>
-            <div className="flex items-center justify-center pb-4 space-x-2">
-              <Select
-                value={selectedModel}
-                onValueChange={(value) => setSelectedModel(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a model" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="llama3-70b-8192">LLama3 70B</SelectItem>
-                  <SelectItem value="llama3-8b-8192">Llama3 8B</SelectItem>
-                  <SelectItem value="gemma-7b-it">Gemma 7B</SelectItem>
-                </SelectContent>
-              </Select>
-              <LanguageSelector />
-            </div>
-            {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <CardTitle>{title}</CardTitle>
-            )}
-          </CardHeader>
-          <div className="flex flex-col flex-1 overflow-hidden">
-            <div className="flex-1 overflow-y-auto">
-              {" "}
-              {/* Scrollable transcription content */}
-              <CardContent>
-                {isLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : activeTab === "view" ? (
-                  formatTranscriptForView(transcript)
-                ) : (
-                  <>
-                    <div className="relative">
-                      <Textarea
-                        value={transcript}
-                        onChange={(e) => setTranscript(e.target.value)}
-                        placeholder="Enter your transcript here..."
-                        className="pr-36 scrollbar-hide bg-slate-100"
-                      />
-                    </div>
-                    <div className="flex mt-4 space-x-2">
-                      <Button onClick={handleSave} disabled={isSaving}>
-                        {isSaving ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Saving
-                          </>
-                        ) : (
-                          "Save"
-                        )}
-                      </Button>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </div>
-            <CardFooter className="flex justify-center items-center w-full p-4 bg-white">
-              <Button variant="outline" onClick={handlePlayAudio}>
-                {isPlaying ? <Pause /> : <Play />}
-              </Button>
-              <div className="flex-1 mx-4">
-                <Input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={audioProgress}
-                  onChange={handleAudioSeek}
-                  className="w-full"
-                />
+        <main className="flex-1 overflow-y-auto">
+          <Card className="flex-1 flex flex-col relative">
+            <CardHeader className="pb-2 pt-4 flex flex-col items-center justify-between">
+              <div className="flex space-x-2 mb-2 w-full justify-center">
+                <Button
+                  variant={activeTab === "view" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveTab("view")}
+                >
+                  View
+                </Button>
+                <Button
+                  variant={activeTab === "edit" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveTab("edit")}
+                >
+                  Edit
+                </Button>
               </div>
+              <div className="flex items-center justify-center pb-4 space-x-2">
+                <Select
+                  value={selectedModel}
+                  onValueChange={(value) => setSelectedModel(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="llama3-70b-8192">LLama3 70B</SelectItem>
+                    <SelectItem value="llama3-8b-8192">Llama3 8B</SelectItem>
+                    <SelectItem value="gemma-7b-it">Gemma 7B</SelectItem>
+                  </SelectContent>
+                </Select>
+                <LanguageSelector />
+              </div>
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CardTitle>{title}</CardTitle>
+              )}
+            </CardHeader>
+            <div className="flex flex-col flex-1 overflow-hidden">
+              <div className="flex-1 overflow-y-auto">
+                {" "}
+                {/* Scrollable transcription content */}
+                <CardContent>
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : activeTab === "view" ? (
+                    formatTranscriptForView(transcript)
+                  ) : (
+                    <>
+                      <div className="relative">
+                        <Textarea
+                          value={transcript}
+                          onChange={(e) => setTranscript(e.target.value)}
+                          placeholder="Enter your transcript here..."
+                          className="pr-36 scrollbar-hide bg-slate-100"
+                        />
+                      </div>
+                      <div className="flex mt-4 space-x-2">
+                        <Button onClick={handleSave} disabled={isSaving}>
+                          {isSaving ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Saving
+                            </>
+                          ) : (
+                            "Save"
+                          )}
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </div>
+              <CardFooter className="flex justify-center items-center w-full p-4 bg-white">
+                <Button variant="outline" onClick={handlePlayAudio}>
+                  {isPlaying ? <Pause /> : <Play />}
+                </Button>
+                <div className="flex-1 mx-4">
+                  <Input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={audioProgress}
+                    onChange={handleAudioSeek}
+                    className="w-full"
+                  />
+                </div>
 
-              <Button onClick={handleRegenerate} disabled={isLoading}>
-                Regenerate
-              </Button>
-            </CardFooter>
-          </div>
-        </Card>
+                <Button onClick={handleRegenerate} disabled={isLoading}>
+                  Regenerate
+                </Button>
+              </CardFooter>
+            </div>
+          </Card>
+        </main>
       </div>
       <audio
         ref={audioRef}

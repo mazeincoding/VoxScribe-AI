@@ -35,7 +35,7 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
 
   return (
     <motion.ul
-      className="absolute top-0 left-full w-full"
+      className="absolute top-0 left-full w-full overflow-y-auto"
       animate={{
         opacity: showTranscripts ? 1 : 0,
         x: showTranscripts ? "-0%" : "0%",
