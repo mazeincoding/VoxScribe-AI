@@ -20,7 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { validateFile, uploadFile, saveTranscription } from "@/lib/upload-helpers";
+import {
+  validateFile,
+  uploadFile,
+  saveTranscription,
+} from "@/lib/upload-helpers";
 
 interface VideoUploadDialogProps {
   isOpen: boolean;
@@ -78,7 +82,7 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
           <div className="mb-4 w-full">
             <Input
               type="file"
-              accept="audio/mpeg,video/mp4,video/quicktime,video/webm"
+              accept="audio/mpeg,audio/mp4,audio/x-m4a,video/mp4,video/quicktime,video/webm"
               ref={fileInputRef}
               onChange={handleFileChange}
               className="mb-4"

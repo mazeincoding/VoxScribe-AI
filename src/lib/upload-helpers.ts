@@ -19,6 +19,8 @@ export const validateFile = (file: File): boolean => {
     "video/mp4",
     "video/quicktime",
     "video/webm",
+    "audio/mp4",
+    "audio/x-m4a",
   ];
   if (!validTypes.includes(file.type)) {
     toast.error("Please upload an MP3 audio or MP4/MOV/WebM video file.");

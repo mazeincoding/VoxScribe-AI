@@ -44,7 +44,7 @@ const UploadSection: React.FC<UploadSectionProps> = ({
       </p>
       <Input
         type="file"
-        accept="audio/mpeg,video/mp4,video/quicktime,video/webm"
+        accept="audio/mpeg,audio/mp4,audio/x-m4a,video/mp4,video/quicktime,video/webm"
         onChange={onFileChange}
         className="hidden"
         ref={fileInputRef}
