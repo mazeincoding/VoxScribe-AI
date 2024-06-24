@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -43,14 +43,21 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedModel, setSelectedModel] = useState("llama3-70b-8192");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length > 0) {
-      const selectedFile = files[0];
-      if (validateFile(selectedFile)) {
-        setFile(selectedFile);
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        const selectedFile = files[0];
+        if (validateFile(selectedFile)) {
+          setFile(selectedFile);
+        }
       }
-    }
+    },
+    []
+  );
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
   };
 
   const handleUpload = async () => {
@@ -86,7 +93,11 @@ const VideoUploadDialog: React.FC<VideoUploadDialogProps> = ({
               ref={fileInputRef}
               onChange={handleFileChange}
               className="mb-4"
+              style={{ display: "none" }}
             />
+            <Button onClick={handleButtonClick} className="w-full mb-4">
+              Choose File
+            </Button>
             <Select
               defaultValue={selectedModel}
               onValueChange={(value) => setSelectedModel(value)}
