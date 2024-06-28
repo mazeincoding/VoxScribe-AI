@@ -3,9 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { UploadIcon, RemoveFormattingIcon } from "@/components/icons";
 import Feature from "@/components/landing-page/sections/section-1/feature";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/config";
-import { ChevronRight, Coins, GiftIcon } from "lucide-react";
+import { ChevronRight, GiftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "../../../ui/input";
 
@@ -33,11 +31,11 @@ const UploadSection: React.FC<UploadSectionProps> = ({
   };
 
   return (
-    <div className="w-full py-16 lg:px-20 lg:w-1/2 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 shadow-xl">
-      <h1 className="text-4xl w-full text-center font-bold mb-4 text-white">
+    <div className="w-full py-16 lg:px-60 p-8 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 shadow-xl">
+      <h1 className="text-6xl w-full text-center font-bold mb-4 text-white">
         The #1 AI-powered transcription app that smartly formats your audio.
       </h1>
-      <p className="text-lg w-full text-center mb-6 text-white opacity-80">
+      <p className="text-2xl w-full text-center mb-6 text-white opacity-80">
         Say goodbye to unreadable transcriptions. Meet VoxScribe -{" "}
         <strong className="text-white">the #1 transcription app</strong> that
         formats your audio in a way that just makes sense.

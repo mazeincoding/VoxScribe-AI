@@ -128,20 +128,7 @@ const LandingPage = () => {
           fileInputRef={fileInputRef}
           user={user}
         />
-        <div className="w-full lg:w-1/2 bg-background flex items-center justify-center min-h-[400px]">
-          <div className="relative w-full h-full p-10 flex justify-center items-center flex-col gap-4">
-            <h2 className="text-3xl font-bold text-primary">See in action</h2>
-            <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-              <iframe
-                src="https://player.vimeo.com/video/965432017?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-                className="absolute top-0 left-0 w-full h-full"
-                title="AI Powered Transcription tool. Format with AI."
-              />
-            </div>
-          </div>
-        </div>
+
         <PreviewDialog
           isOpen={isDialogOpen}
           onOpenChange={setIsDialogOpen}
