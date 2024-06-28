@@ -11,6 +11,26 @@ export const metadata: Metadata = {
   title: "VoxScribe",
   description:
     "VoxScribe - an AI powered transcription app that turns audio into perfectly-formatted text.",
+  openGraph: {
+    title: "VoxScribe",
+    description:
+      "AI-powered transcription app that turns audio into perfectly-formatted text.",
+    images: [
+      {
+        url: "https://voxscribe-ai.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "VoxScribe Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "VoxScribe",
+    description:
+      "AI-powered transcription app that turns audio into perfectly-formatted text.",
+    images: ["https://voxscribe-ai.vercel.app/og-image.png"],
+  },
 };
 
 export default function RootLayout({
