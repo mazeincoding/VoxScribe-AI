@@ -9,9 +9,8 @@ export default function Feature({ icon, title, description }: FeatureProps) {
     <div className="flex items-start gap-4">
       <div className="flex-shrink-0">{icon}</div>
       <div className="text-left">
-        <h3 className="text-2xl
-         font-medium text-primary-foreground">{title}</h3>
-        <p className="text-primary-foreground/80 text-xl">{description}</p>
+        <h3 className="text-xl font-medium text-primary-foreground">{title}</h3>
+        <p className="text-primary-foreground/80">{description}</p>
       </div>
     </div>
   );
