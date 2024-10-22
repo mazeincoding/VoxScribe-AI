@@ -12,7 +12,6 @@ import {
 import { Card } from "../ui/card";
 import { ClaudeLogo, OpenAILogo } from "../../icons/icons";
 import { Button } from "../ui/button";
-import { throttle } from "lodash";
 
 interface FeatureProps {
   title: string;
