@@ -10,7 +10,7 @@ const PrivacyPolicyPage: React.FC = () => {
         </CardHeader>
         <CardContent>
           <p className="mb-4">
-            This Privacy Policy describes how VoxScribe (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;)
+            This Privacy Policy describes how PrettySpeech (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;)
             collects, uses, and shares your personal information when you use
             our website and services.
           </p>

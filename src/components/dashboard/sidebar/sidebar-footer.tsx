@@ -62,16 +62,16 @@ const SidebarFooter: React.FC<SidebarFooterProps> = ({
         <DialogContent>
           <DialogTitle>Support Us</DialogTitle>
           <DialogDescription>
-            VoxScribe is a labor of love, dedicated to providing you with a
+            PrettySpeech is a labor of love, dedicated to providing you with a
             seamless, ad-free experience. We believe in keeping your data
             private and secure, without any hidden costs.
             <br />
             <br />
             However, maintaining and improving this platform requires
             significant time and resources. Your support can make a huge
-            difference. If VoxScribe has helped you in the past, please consider
-            making a donation. Every contribution, no matter the size, helps us
-            continue to serve you better.
+            difference. If PrettySpeech has helped you in the past, please
+            consider making a donation. Every contribution, no matter the size,
+            helps us continue to serve you better.
             <br />
             <br />
             Thank you for your support.

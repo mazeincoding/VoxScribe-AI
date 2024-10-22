@@ -8,28 +8,28 @@ import { Analytics } from "@vercel/analytics/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VoxScribe",
+  title: "PrettySpeech",
   description:
-    "VoxScribe - an AI powered transcription app that turns audio into perfectly-formatted text.",
+    "PrettySpeech: Transform your speech into beautifully formatted text with AI-powered transcription.",
   openGraph: {
-    title: "VoxScribe",
+    title: "PrettySpeech",
     description:
-      "AI-powered transcription app that turns audio into perfectly-formatted text.",
+      "PrettySpeech: Transform your speech into beautifully formatted text with AI-powered transcription.",
     images: [
       {
-        url: "https://voxscribe-ai.vercel.app/og-image.png",
+        url: "https://prettyspeech.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "VoxScribe Preview",
+        alt: "PrettySpeech Preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "VoxScribe",
+    title: "PrettySpeech",
     description:
       "AI-powered transcription app that turns audio into perfectly-formatted text.",
-    images: ["https://voxscribe-ai.vercel.app/og-image.png"],
+    images: ["https://prettyspeech.com/og-image.png"],
   },
 };
 

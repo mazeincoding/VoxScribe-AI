@@ -16,9 +16,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isOpen }) => {
       }}
       className="flex items-center justify-between p-2 border-b pl-0 overflow-hidden"
     >
-      <span className="text-lg font-semibold">
-        {isOpen ? "VoxScribe" : "VSX"}
-      </span>
+      <span className="text-lg font-semibold">PrettySpeech</span>
     </motion.header>
   );
 };

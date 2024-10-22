@@ -11,8 +11,8 @@ const TermsOfServicePage: React.FC = () => {
         <CardContent>
           <p className="mb-4">
             These Terms of Service (&quot;Terms&quot;) govern your access to and
-            use of VoxScribe&apos;s website and services. By using our services,
-            you agree to be bound by these Terms.
+            use of PrettySpeech&apos;s website and services. By using our
+            services, you agree to be bound by these Terms.
           </p>
           <h2 className="text-2xl font-semibold mb-2">Use of Services</h2>
           <p className="mb-4">
@@ -24,10 +24,10 @@ const TermsOfServicePage: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-2">Content</h2>
           <p className="mb-4">
             You retain ownership of any intellectual property rights that you
-            hold in the content you submit to VoxScribe. By submitting content,
-            you grant VoxScribe a worldwide, royalty-free license to use,
-            reproduce, modify, and distribute that content for the purpose of
-            providing our services.
+            hold in the content you submit to PrettySpeech. By submitting
+            content, you grant PrettySpeech a worldwide, royalty-free license to
+            use, reproduce, modify, and distribute that content for the purpose
+            of providing our services.
           </p>
           <h2 className="text-2xl font-semibold mb-2">Termination</h2>
           <p className="mb-4">
