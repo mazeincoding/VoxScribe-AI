@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-primary">PrettySpeech</h3>
             <p className="text-muted-foreground flex items-center gap-1.5">
-              Developed with{" "}
+              Made with{" "}
               <HeartIcon className="size-4 flex-shrink-0 text-primary fill-current" />{" "}
               by{" "}
               <Link
