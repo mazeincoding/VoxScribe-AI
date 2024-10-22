@@ -287,7 +287,7 @@ function AppPreview() {
             <PanelRightIcon className="size-5 flex-shrink-0" />
           </Button>
         </div>
-        <div className="pt-0 md:mt-12 px-12 pb-8 flex flex-col gap-4">
+        <div className="pt-0 md:mt-12 px-8 pb-8 flex flex-col gap-4">
           <h2 className="font-bold text-2xl md:text-3xl">
             Interview with Bill Gates
           </h2>
