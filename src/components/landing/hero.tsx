@@ -45,7 +45,7 @@ function TranscriptionCard({
     <MacWindow className={`w-full max-w-[700px] lg:w-[500px] ${className}`}>
       <MacWindowHeader>
         <MacWindowControls />
-        <p>PrettySpeech</p>
+        <p>{is_formatted ? "Formatted" : "Wall of text"}</p>
       </MacWindowHeader>
       <MacWindowContent>
         <div className="space-y-4 text-left">
