@@ -14,7 +14,7 @@ export function Header() {
 
   return (
     <header className="flex justify-between items-center py-3 px-4 bg-background border-b sticky top-0 z-50">
-      <Link href="/" className="flex items-center">
+      <Link href="/" className="flex items-center hover:no-underline">
         <Image
           src="/logo.svg"
           alt="PrettySpeech Logo"
