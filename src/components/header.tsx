@@ -22,7 +22,7 @@ export function Header() {
           height={32}
           className="mr-2"
         />
-        <span className="text-xl font-bold text-primary hidden sm:inline">
+        <span className="text-xl font-bold text-primary">
           PrettySpeech
         </span>
       </Link>
