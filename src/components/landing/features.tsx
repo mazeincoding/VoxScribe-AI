@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, MicIcon, PanelRightIcon } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   MacWindow,
@@ -12,6 +12,8 @@ import {
 import { Card } from "../ui/card";
 import { ClaudeLogo, OpenAILogo } from "../../icons/icons";
 import { Button } from "../ui/button";
+import { toPng } from "html-to-image";
+import Image from "next/image";
 
 interface FeatureProps {
   title: string;
@@ -270,44 +272,74 @@ function Model({ model }: { model: TModel }) {
 }
 
 function AppPreview() {
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (event.key === "S" && event.shiftKey) {
+      if (previewRef.current) {
+        toPng(previewRef.current, { width: 700 })
+          .then((dataUrl) => {
+            const link = document.createElement("a");
+            link.download = "app-preview.png";
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch((err) => {
+            console.error("Error saving image:", err);
+          });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
   return (
-    <div className="min-h-[500px] border rounded-lg flex">
-      <div className="w-[250px] hidden md:block">
-        <AppSidebar />
-      </div>
-      {/* Main content */}
-      <div className="flex-1 flex flex-col gap-8 relative">
-        {/* Header (small screens) */}
-        <div className="flex md:hidden p-4 border-b bg-secondary">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-auto w-auto p-2 text-muted-foreground hover:text-foreground/75"
-          >
-            <PanelRightIcon className="size-5 flex-shrink-0" />
-          </Button>
+    <>
+      <div
+        className="min-h-[500px] border rounded-lg bg-background hidden md:flex"
+        ref={previewRef}
+      >
+        <div className="w-52 md:w-60">
+          <AppSidebar />
         </div>
-        <div className="pt-0 md:mt-12 px-8 pb-8 flex flex-col gap-4">
-          <h2 className="font-bold text-2xl md:text-3xl">
-            Interview with Bill Gates
-          </h2>
-          <div className="text-base md:text-lg flex flex-col gap-4">
-            <b>Welcome to the Show!</b>
-            <p>
-              I'm so happy to have you here. This is the first time having you
-              on, so thanks.
-            </p>
-            <p>
-              So I know you were nervous about the entrance. I think people feel
-              like they're supposed to dance. And so I was really surprised,
-              because I was here earlier today for your rehearsal, and then you
-              abandoned it. But we should at least show them the rehearsal,
-              because it was really good. <b>Shout out to them people</b>
-            </p>
+        {/* Main content */}
+        <div className="flex-1 flex flex-col gap-8 relative">
+          <div className="mt-8 px-8 pb-8 flex flex-col gap-4">
+            <h2 className="font-bold text-2xl md:text-3xl">
+              Interview with Bill Gates
+            </h2>
+            <div className="text-base md:text-lg flex flex-col gap-4">
+              <b>Welcome to the Show!</b>
+              <p>
+                I'm so happy to have you here. This is the first time having you
+                on, so thanks.
+              </p>
+              <p>
+                So I know you were nervous about the entrance. I think people
+                feel like they're supposed to dance. And so I was really
+                surprised, because I was here earlier today for your rehearsal,
+                and then you abandoned it. But we should at least show them the
+                rehearsal, because it was really good.{" "}
+                <b>Shout out to them people</b>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <Image
+        src="/app-preview.png"
+        alt="App preview"
+        width={700}
+        height={500}
+        quality={100}
+        className="block md:hidden"
+      />
+    </>
   );
 }
 
