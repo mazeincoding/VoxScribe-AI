@@ -71,7 +71,7 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
           <Link
             key={transcript.id}
             href={`/transcriptions/${transcript.id}`}
-            className="block"
+            className="block text-foreground hover:no-underline"
           >
             <motion.li
               initial={{ opacity: 0 }}

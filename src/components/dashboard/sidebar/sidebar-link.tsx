@@ -45,7 +45,11 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
   };
 
   return (
-    <Link href={link.href} onClick={handleClick}>
+    <Link
+      href={link.href}
+      onClick={handleClick}
+      className="text-foreground hover:no-underline"
+    >
       <motion.li
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
