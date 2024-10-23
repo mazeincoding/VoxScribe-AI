@@ -47,7 +47,7 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="p-2 rounded-md cursor-pointer flex items-center hover:bg-gray-100 border mb-2"
+        className="p-2 rounded-lg cursor-pointer flex items-center hover:bg-gray-100 border mb-2"
       >
         <Breadcrumb className="flex items-center">
           <BreadcrumbItem>
@@ -78,7 +78,7 @@ const SidebarTranscripts: React.FC<SidebarTranscriptsProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className={cn("p-2 rounded-md cursor-pointer", {
+              className={cn("p-2 rounded-lg cursor-pointer", {
                 "bg-gray-200": isActive(`/transcriptions/${transcript.id}`),
                 "hover:bg-gray-100": !isActive(
                   `/transcriptions/${transcript.id}`

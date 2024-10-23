@@ -130,7 +130,7 @@ Your Contact Form System
               value={formData.name}
               onChange={handleInputChange}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-lg"
             />
           </div>
           <div className="space-y-2">
@@ -144,7 +144,7 @@ Your Contact Form System
               value={formData.email}
               onChange={handleInputChange}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-lg"
             />
           </div>
           <div className="space-y-2">
@@ -158,7 +158,7 @@ Your Contact Form System
               value={formData.subject}
               onChange={handleInputChange}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-lg"
             />
           </div>
           <div className="space-y-2">
@@ -172,7 +172,7 @@ Your Contact Form System
               onChange={handleInputChange}
               required
               rows={6}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded-lg"
             />
           </div>
           <Button

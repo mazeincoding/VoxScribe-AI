@@ -52,7 +52,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          "p-2 rounded-md cursor-pointer flex items-center justify-between",
+          "p-2 rounded-lg cursor-pointer flex items-center justify-between",
           {
             "bg-gray-200": isActive(link.href),
             "hover:bg-gray-100": !isActive(link.href),

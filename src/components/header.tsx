@@ -22,9 +22,7 @@ export function Header() {
           height={32}
           className="mr-2"
         />
-        <span className="text-xl font-bold text-primary">
-          PrettySpeech
-        </span>
+        <span className="text-xl font-bold text-primary">PrettySpeech</span>
       </Link>
       <nav>
         {user ? (
@@ -37,7 +35,7 @@ export function Header() {
           <Button
             disabled={loading}
             onClick={() => setIsSignupOpen(true)}
-            className="rounded-full"
+            className="rounded-lg"
           >
             Sign Up
           </Button>
