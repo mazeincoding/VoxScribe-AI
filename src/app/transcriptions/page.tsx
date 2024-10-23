@@ -111,6 +111,7 @@ const TranscriptionsPage = () => {
       <main className="flex-1 container p-4 overflow-y-auto">
         <Button
           className="lg:hidden mb-4"
+          size="icon"
           variant="outline"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
