@@ -119,9 +119,10 @@ function RealtimePreview() {
         Math.min(1, (windowHeight - top) / (windowHeight + height))
       );
 
-      // Adjust the calculation to show more lines as we scroll down
+      // Adjust the calculation to start showing lines earlier on larger screens
+      const screenOffset = window.innerWidth > 1024 ? 0.2 : 0; // Example offset for larger screens
       const linesToShow = Math.floor(
-        (visiblePercentage * 1.2 + 0.1) * formattedTranscript.length
+        (visiblePercentage + screenOffset) * formattedTranscript.length
       );
       setVisibleLines(linesToShow);
     };
