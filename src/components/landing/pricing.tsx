@@ -73,7 +73,7 @@ export function Pricing() {
   return (
     <div className="flex flex-col justify-center py-20 max-w-6xl mx-auto px-12 gap-8">
       <h2 className="text-3xl font-bold text-center">Choose Your Plan</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:mt-2">
         {pricingTiers.map((tier, index) => (
           <Card
             key={index}
