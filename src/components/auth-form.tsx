@@ -70,7 +70,7 @@ export function AuthForm({ type }: { type: "login" | "signup" }) {
             </div>
           ) : (
             // <p className="text-sm text-muted-foreground">
-            //   Forgot your password? <Link href="/reset-password">Reset it</Link>
+            //   Forgot your password? <Link href="/login/reset">Reset it</Link>
             // </p>
             <></>
           )}

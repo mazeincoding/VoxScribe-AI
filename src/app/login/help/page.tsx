@@ -24,7 +24,7 @@ const login_options: LoginOption[] = [
     description: "Forgot your password? We can help you reset it.",
     button_text: "Reset password",
     icon: <KeyRound className="h-5 w-5 flex-shrink-0" />,
-    redirect_url: "/reset-password",
+    redirect_url: "/login/reset",
   },
 ];
 
