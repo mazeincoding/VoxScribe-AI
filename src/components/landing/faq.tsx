@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import {
   Accordion,
   AccordionContent,
@@ -8,7 +9,7 @@ import {
 
 interface FAQ {
   question: string;
-  answer: string;
+  answer: React.ReactNode;
 }
 
 const faqs: FAQ[] = [
@@ -26,6 +27,14 @@ const faqs: FAQ[] = [
     question: "Is my data secure?",
     answer:
       "Yes, we take data security very seriously. All uploads and transcripts are encrypted, and we adhere to strict privacy policies to protect your information.",
+  },
+  {
+    question: "I have another question",
+    answer: (
+      <>
+        You can reach out to us <Link href="/contact">here</Link>.
+      </>
+    ),
   },
 ];
 
