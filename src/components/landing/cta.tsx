@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function CtaSection() {
   return (
@@ -13,13 +14,15 @@ export function CtaSection() {
         </p>
       </div>
       <div className="w-full max-w-sm flex flex-col items-center gap-4">
-        <Button
-          variant="secondary"
-          className="flex items-center gap-1 w-full md:w-fit"
-        >
-          <span>Get access for free</span>
-          <ArrowRight className="size-4 flex-shrink-0" />
-        </Button>
+        <Link href="/signup" className="hover:no-underline">
+          <Button
+            variant="secondary"
+            className="flex items-center gap-1 w-full md:w-fit"
+          >
+            <span>Get access for free</span>
+            <ArrowRight className="size-4 flex-shrink-0" />
+          </Button>
+        </Link>
         <p className="text-xs text-primary-foreground/90">
           No credit card needed
         </p>

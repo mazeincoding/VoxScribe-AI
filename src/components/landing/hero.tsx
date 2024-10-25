@@ -7,6 +7,7 @@ import {
   MacWindowControls,
   MacWindowHeader,
 } from "../mac-window";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -19,7 +20,9 @@ export function Hero() {
         <p className="text-lg lg:text-xl text-muted-foreground">
           Transcribe your words and format them beautifully—all automatically!
         </p>
-        <Button className="w-fit">See in action</Button>
+        <Link href="/signup">
+          <Button className="w-fit">See in action</Button>
+        </Link>
       </div>
       <div>
         <div className="relative mt-0 lg:-mt-32">

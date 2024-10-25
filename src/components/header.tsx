@@ -22,9 +22,9 @@ export function Header() {
         <span className="text-xl font-bold text-primary">PrettySpeech</span>
       </Link>
       <nav>
-        <Button onClick={() => setIsSignupOpen(true)} className="rounded-lg">
-          Sign Up
-        </Button>
+        <Link href="/signup">
+          <Button className="rounded-lg">Sign Up</Button>
+        </Link>
         <SignupDialog
           isOpen={isSignupOpen}
           onClose={() => setIsSignupOpen(false)}
