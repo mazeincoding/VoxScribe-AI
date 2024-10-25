@@ -28,7 +28,7 @@ const pricingTiers: PricingTier[] = [
     price: "$0",
     description: "For users just starting out",
     features: [
-      { name: "60 minutes of transcription monthly", is_available: true },
+      { name: "30 minutes of transcription monthly", is_available: true },
       { name: "Advanced formatting", is_available: true },
       { name: "Real-time", is_available: true },
       { name: "Unlimited exports", is_available: true },
