@@ -60,11 +60,6 @@ const TranscriptionsPage = () => {
       return <div>Error: {error.message}</div>;
     }
 
-    if (!user) {
-      router.push("/");
-      return null;
-    }
-
     return (
       <>
         <h1 className="text-2xl font-bold mb-4 text-center text-slate-8000">
