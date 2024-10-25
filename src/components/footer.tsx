@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/privacy-policy"
+                  href="/privacy"
                   className="hover:text-primary transition-colors"
                 >
                   Privacy Policy
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <Link
-                  href="/terms-of-service"
+                  href="/terms"
                   className="hover:text-primary transition-colors"
                 >
                   Terms of Service
