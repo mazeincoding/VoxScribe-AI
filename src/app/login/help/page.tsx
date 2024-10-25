@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { BackButton } from "@/components/back-button";
 
 interface LoginOption {
   title: string;
@@ -30,10 +31,8 @@ const login_options: LoginOption[] = [
 
 export default function LoginHelpPage() {
   return (
-    <div className="relative p-4">
-      <header className="absolute left-4 top-4">
-        <Link href="/login">Go back</Link>
-      </header>
+    <div>
+      <BackButton className="absolute left-4 top-4" />
       <div className="mx-auto mt-12 flex max-w-xl flex-col items-center gap-6 px-6 py-12">
         <h1 className="text-4xl font-bold">What do you need help with?</h1>
         <div className="flex w-full flex-col gap-4">
