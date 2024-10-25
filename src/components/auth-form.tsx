@@ -17,39 +17,39 @@ export function AuthForm({ type }: { type: "login" | "signup" }) {
   };
 
   return (
-    <section className="mx-auto flex flex-col items-center justify-center px-6 py-8 md:h-screen lg:py-0">
-      <div className="w-full rounded-lg border bg-background sm:max-w-md xl:p-0">
-        <div className="space-y-4 p-6 sm:p-8 md:space-y-6">
-          <h1 className="leading-tigh text-xl font-bold">
-            {type === "signup" ? "Create an account" : "Log in"}
-          </h1>
-          <form className="space-y-4 md:space-y-6" action="#">
-            <div className="space-y-1.5">
-              <Label htmlFor="email">Your email</Label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="name@company.com"
-                value={email}
-                onChange={(event) => set_email(event.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                required
-                showPassword={showPassword}
-                onTogglePassword={togglePasswordVisibility}
-                value={password}
-                onChange={(event) => set_password(event.target.value)}
-              />
-            </div>
+    <div className="w-full rounded-lg border bg-background sm:max-w-md xl:p-0">
+      <div className="space-y-4 p-6 sm:p-8">
+        <h1 className="leading-tigh text-xl font-bold">
+          {type === "signup" ? "Create an account" : "Log in"}
+        </h1>
+        <form className="space-y-4" action="#">
+          <div className="space-y-1.5">
+            <Label htmlFor="email">Your email</Label>
+            <Input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="name@company.com"
+              value={email}
+              onChange={(event) => set_email(event.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="••••••••"
+              required
+              showPassword={showPassword}
+              onTogglePassword={togglePasswordVisibility}
+              value={password}
+              onChange={(event) => set_password(event.target.value)}
+            />
+          </div>
+          {type === "signup" ? (
             <div className="flex items-start">
               <div className="flex h-5 items-center">
                 <Input
@@ -68,19 +68,43 @@ export function AuthForm({ type }: { type: "login" | "signup" }) {
                 </Label>
               </div>
             </div>
+          ) : (
+            // <p className="text-sm text-muted-foreground">
+            //   Forgot your password? <Link href="/reset-password">Reset it</Link>
+            // </p>
+            <></>
+          )}
+          <div className="flex flex-col gap-4">
             <Button
               type="submit"
               className="w-full"
-              disabled={!email || !password || !accepted_terms}
+              disabled={
+                !email || !password || (type === "signup" && !accepted_terms)
+              }
             >
-              Create an account
+              {type === "signup" ? "Create an account" : "Log in"}
             </Button>
-            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              Already have an account? <Link href="#">Login</Link>
-            </p>
-          </form>
-        </div>
+            {type === "login" && (
+              <Link href="/login-help">
+                <Button variant="secondary" type="button" className="w-full">
+                  Can't log in?
+                </Button>
+              </Link>
+            )}
+          </div>
+          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+            {type === "signup" ? (
+              <>
+                Already have an account? <Link href="/login">Login</Link>
+              </>
+            ) : (
+              <>
+                Don't have an account? <Link href="/signup">Sign up</Link>
+              </>
+            )}
+          </p>
+        </form>
       </div>
-    </section>
+    </div>
   );
 }
