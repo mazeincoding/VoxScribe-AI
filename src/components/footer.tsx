@@ -1,13 +1,12 @@
 import React from "react";
 import Link from "next/link";
-import { FaTwitter } from "react-icons/fa";
 import { HeartIcon } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
     <footer className="bg-background text-foreground py-12 border-t px-6">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-primary">PrettySpeech</h3>
             <p className="text-muted-foreground flex items-center gap-1.5">
@@ -24,35 +23,6 @@ const Footer: React.FC = () => {
             </p>
           </div>
           <div className="space-y-4">
-            <h4 className="text-base font-semibold">Product</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/features"
-                  className="hover:text-primary transition-colors"
-                >
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="hover:text-primary transition-colors"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faq"
-                  className="hover:text-primary transition-colors"
-                >
-                  FAQ
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="space-y-4">
             <h4 className="text-base font-semibold">Company</h4>
             <ul className="space-y-2">
               <li>
@@ -61,14 +31,6 @@ const Footer: React.FC = () => {
                   className="hover:text-primary transition-colors"
                 >
                   About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/careers"
-                  className="hover:text-primary transition-colors"
-                >
-                  Careers
                 </Link>
               </li>
               <li>
