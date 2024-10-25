@@ -85,7 +85,7 @@ export function AuthForm({ type }: { type: "login" | "signup" }) {
               {type === "signup" ? "Create an account" : "Log in"}
             </Button>
             {type === "login" && (
-              <Link href="/login-help">
+              <Link href="/login/help">
                 <Button variant="secondary" type="button" className="w-full">
                   Can't log in?
                 </Button>
