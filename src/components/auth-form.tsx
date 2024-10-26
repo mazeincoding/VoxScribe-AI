@@ -139,7 +139,7 @@ export function AuthForm({ type }: { type: "login" | "signup" }) {
               </Link>
             )}
           </div>
-          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             {type === "signup" ? (
               <>
                 Already have an account? <Link href="/login">Login</Link>
