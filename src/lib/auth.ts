@@ -1,5 +1,10 @@
 import { auth } from "@/firebase/config";
-import { createUserWithEmailAndPassword, User, AuthError } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  User,
+  AuthError,
+  getIdToken,
+} from "firebase/auth";
 
 export async function email_signup({
   email,
@@ -10,6 +15,24 @@ export async function email_signup({
 }): Promise<{ user: User } | { error: string }> {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
+
+    // Get ID token and create session cookie
+    const token = await getIdToken(result.user);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/session`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to create session");
+    }
+
     return { user: result.user };
   } catch (error) {
     const auth_error = error as AuthError;
