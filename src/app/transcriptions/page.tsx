@@ -29,9 +29,10 @@ const TranscriptionsPage = () => {
     const fetchTranscriptions = async () => {
       if (user?.uid) {
         const transcriptionsRef = ref(db, `users/${user.uid}/transcriptions`);
-        const data = await readFromDatabase<Record<string, Transcription>>(
-          transcriptionsRef
-        );
+        const data =
+          await readFromDatabase<Record<string, Transcription>>(
+            transcriptionsRef,
+          );
         const transcriptionsArray = data ? Object.values(data) : [];
         setTranscriptions(transcriptionsArray);
       }
@@ -41,16 +42,28 @@ const TranscriptionsPage = () => {
   }, [user?.uid]);
 
   const filteredTranscriptions = transcriptions.filter((transcription) =>
-    transcription.title.toLowerCase().includes(searchTerm.toLowerCase())
+    transcription.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const renderContent = () => {
     if (loading) {
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className="w-full h-32" />
-          ))}
+        <div className="py-4">
+          <h1 className="text-slate-8000 mb-4 text-center text-2xl font-bold">
+            My Transcriptions
+          </h1>
+          <Input
+            type="text"
+            placeholder="Search transcriptions..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mb-4 bg-slate-100"
+          />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <Skeleton key={index} className="h-32 w-full" />
+            ))}
+          </div>
         </div>
       );
     }
@@ -60,8 +73,8 @@ const TranscriptionsPage = () => {
     }
 
     return (
-      <>
-        <h1 className="text-2xl font-bold mb-4 text-center text-slate-8000">
+      <div className="py-4">
+        <h1 className="text-slate-8000 mb-4 text-center text-2xl font-bold">
           My Transcriptions
         </h1>
         <Input
@@ -74,7 +87,7 @@ const TranscriptionsPage = () => {
         {filteredTranscriptions.length === 0 ? (
           <p>No transcriptions found.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredTranscriptions.map((transcription) => (
               <Card
                 key={transcription.id}
@@ -95,16 +108,16 @@ const TranscriptionsPage = () => {
             ))}
           </div>
         )}
-      </>
+      </div>
     );
   };
 
   return (
     <div className="flex h-screen">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <main className="flex-1 container p-4 overflow-y-auto">
+      <main className="container flex-1 overflow-y-auto p-4">
         <Button
-          className="lg:hidden mb-4"
+          className="mb-4 lg:hidden"
           size="icon"
           variant="outline"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
