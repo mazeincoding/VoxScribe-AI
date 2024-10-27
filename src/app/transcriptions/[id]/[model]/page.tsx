@@ -9,7 +9,6 @@ import { Transcription as TranscriptionType } from "@/types/transcription";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "react-hot-toast";
 import { ref, get } from "firebase/database";
-import { FeaturesDialog } from "@/components/features-dialog";
 
 export default function TranscriptionPage() {
   const params = useParams();
@@ -17,7 +16,7 @@ export default function TranscriptionPage() {
   const model = params.model as string;
   const [user, loading] = useAuthState(auth);
   const [transcription, setTranscription] = useState<TranscriptionType | null>(
-    null
+    null,
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +26,7 @@ export default function TranscriptionPage() {
         try {
           const transcriptionRef = ref(
             db,
-            `users/${user.uid}/transcriptions/${id}`
+            `users/${user.uid}/transcriptions/${id}`,
           );
           const snapshot = await get(transcriptionRef);
           if (snapshot.exists()) {
@@ -58,7 +57,6 @@ export default function TranscriptionPage() {
   return transcription ? (
     <>
       <Transcription transcription={transcription} user={user!} model={model} />
-      <FeaturesDialog />
     </>
   ) : (
     <Skeleton className="h-screen w-full" />
