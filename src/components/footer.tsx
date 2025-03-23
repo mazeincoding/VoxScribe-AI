@@ -4,14 +4,14 @@ import { HeartIcon } from "lucide-react";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-background text-foreground py-12 border-t px-6">
+    <footer className="border-t bg-background px-6 py-12 text-foreground">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-primary">PrettySpeech</h3>
-            <p className="text-muted-foreground flex items-center gap-1.5">
+            <p className="flex items-center gap-1.5 text-muted-foreground">
               Made with{" "}
-              <HeartIcon className="size-4 flex-shrink-0 text-primary fill-current" />{" "}
+              <HeartIcon className="size-4 flex-shrink-0 fill-current text-primary" />{" "}
               by{" "}
               <Link
                 href="https://twitter.com/mazewinther1"
@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-primary transition-colors"
+                  className="transition-colors hover:text-primary"
                 >
                   About Us
                 </Link>
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/contact"
-                  className="hover:text-primary transition-colors"
+                  className="transition-colors hover:text-primary"
                 >
                   Contact
                 </Link>
@@ -49,7 +49,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/privacy"
-                  className="hover:text-primary transition-colors"
+                  className="transition-colors hover:text-primary"
                 >
                   Privacy Policy
                 </Link>
@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
               <li>
                 <Link
                   href="/terms"
-                  className="hover:text-primary transition-colors"
+                  className="transition-colors hover:text-primary"
                 >
                   Terms of Service
                 </Link>
@@ -65,10 +65,9 @@ const Footer: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 md:flex-row">
           <div className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} PrettySpeech AI. All rights
-            reserved.
+            &copy; PrettySpeech AI. All rights reserved.
           </div>
         </div>
       </div>
